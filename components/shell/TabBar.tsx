@@ -11,6 +11,8 @@ const tab = "flex min-h-11 flex-col items-center gap-1 text-[11px] no-underline"
 /** Phone bottom bar with the gold hex Log button (below 900px). */
 export function TabBar() {
   const pathname = usePathname();
+  // The log form has its own bottom bar (LogPlay.dc.html).
+  if (pathname === "/log" || /^\/quests\/[^/]+\/edit$/.test(pathname)) return null;
   const links = [
     { href: "/", label: "Island", icon: <IslandIcon size={22} active={false} /> },
     { href: "/quests", label: "Quests", icon: <QuestsIcon size={22} /> },

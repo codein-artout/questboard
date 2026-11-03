@@ -32,7 +32,7 @@ export function TitlesGrid({ titles, displayed, canChoose }: { titles: T[]; disp
                 disabled={pending}
                 aria-pressed={displayed === t.id}
                 onClick={() => start(async () => { await setDisplayedTitleAction(displayed === t.id ? null : t.id); router.refresh(); })}
-                className={cn("mt-2 h-8 rounded-full px-3 text-xs font-bold", displayed === t.id ? "bg-title-ink text-title-bg" : "border border-[#7B5CC4] text-title-ink")}
+                className={cn("-mx-1 mt-1.5 h-8 rounded-full px-1 text-xs font-semibold underline-offset-2", displayed === t.id ? "text-title-ink" : "text-title-ink/80 underline decoration-dotted hover:text-title-ink")}
               >
                 {displayed === t.id ? "Shown by your name" : "Show by my name"}
               </button>

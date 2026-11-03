@@ -3,7 +3,7 @@
  * 1440, 1024 and 390 px as a seeded player (dev sign-in), into screenshots/.
  * Used for the visual comparison against design/screens.
  */
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import { mkdirSync } from "node:fs";
 
 const base = process.argv[2] ?? "http://localhost:3000";

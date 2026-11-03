@@ -256,7 +256,7 @@ export function RewardView({ data, next, shareUrl }: { data: RewardData; next?: 
           <span className="text-[13px] text-muted">
             Level {p.level.after}, {p.level.xpIntoLevel.toLocaleString("en-US")} of {p.level.xpForNext.toLocaleString("en-US")} XP{pending ? " (projected)" : ""}
           </span>
-          <span className="font-display text-2xl font-black" aria-live="polite">
+          <span className="whitespace-nowrap font-display text-2xl font-black" aria-live="polite">
             +{total} XP
           </span>
         </div>

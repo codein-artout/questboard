@@ -15,13 +15,15 @@ type Data = NonNullable<Awaited<ReturnType<typeof getTilePage>>>;
 export function TilePage({ d, night, isAdmin, viewerSignedIn }: { d: Data; night: { id: string; label: string } | null; isAdmin: boolean; viewerSignedIn: boolean }) {
   const s = d.isSelf;
   const tier = d.tile?.tier ?? 0;
+  const crownCards = (layout: "stack" | "row") =>
+    d.crowns.length ? (
+      d.crowns.map((c) => <CrownCard key={c.scope} scope={c.scope} headline={c.headline} detail={c.detail} layout={layout} />)
+    ) : (
+      <CrownCard layout={layout} scope="Crown" headline="No crown yet" detail={d.game.scoring === "points" ? "Log a scored quest with a friend to set the record." : d.game.scoring === "coop" ? "Win it together to claim it." : "Win rate needs 5 plays each."} />
+    );
   const aside = (
     <>
-      {d.crowns.length ? (
-        d.crowns.map((c) => <CrownCard key={c.scope} scope={c.scope} headline={c.headline} detail={c.detail} />)
-      ) : (
-        <CrownCard scope="Crown" headline="No crown yet" detail={d.game.scoring === "points" ? "Log a scored quest with a friend to set the record." : d.game.scoring === "coop" ? "Win it together to claim it." : "Win rate needs 5 plays each."} />
-      )}
+      <div className="hidden flex-col gap-3 wide:flex">{crownCards("stack")}</div>
       {d.taughtBy ? (
         <Panel className="flex items-center gap-3 p-4">
           <PlayerDisc player={d.taughtBy} size={30} />
@@ -95,9 +97,13 @@ export function TilePage({ d, night, isAdmin, viewerSignedIn }: { d: Data; night
         </div>
       </Panel>
 
+      {/* Below 1200px the crown sits right under the tiers, as in TileDetail.dc.html. */}
+      <div className="mt-2.5 flex flex-col gap-2.5 wide:hidden">{crownCards("row")}</div>
+
       {d.tile && d.tile.plays > 0 ? (
         <StatGrid
           className="mt-3"
+          colsClass="grid-cols-2 desk:grid-cols-4"
           label={s ? "Your records" : "Records"}
           stats={[
             { value: d.records.best !== null ? fmtScore(d.records.best) : "–", label: "personal best" },
