@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Character sheet</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 1040px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <section style="padding: 24px 20px 0; display: flex; align-items: center; gap: 16px">
+    <span aria-hidden="true" style="width: 68px; height: 68px; border-radius: 34px; background: #2459B8; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font: 900 32px 'Big Shoulders Display', sans-serif; box-shadow: 0 0 0 3px #0F2E45, 0 0 0 6px #F5C84B">C</span>
+    <div>
+      <h1 style="margin: 0; font: 900 34px/1 'Big Shoulders Display', sans-serif">Ciao</h1>
+      <p style="margin: 4px 0 0; font-size: 14px; color: #9DB7C9">Level 14, plays blue</p>
+    </div>
+  </section>
+
+  <section style="margin: 18px 16px 0; background: #17405E; border-radius: 16px; padding: 16px; display: flex; gap: 14px; align-items: center">
+    <div aria-hidden="true" style="position: relative; width: 56px; height: 64px; flex: none">
+      <div style="position: absolute; left: 0; right: 0; top: 6px; height: 58px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #245C38"></div>
+      <div style="position: absolute; left: 0; right: 0; top: 0; height: 58px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #3E9B5F; display: flex; align-items: center; justify-content: center">
+        <svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 2 18 11h-3.5l4.5 7H5l4.5-7H6z" fill="#FFFFFF"></path></svg>
+      </div>
+    </div>
+    <div>
+      <div style="font: 800 26px/1 'Big Shoulders Display', sans-serif">The Architect</div>
+      <div style="font-size: 14px; color: #9DB7C9; margin-top: 4px; line-height: 1.4">Most of your quests are engine builders. Your class shifts as your world does.</div>
+    </div>
+  </section>
+
+  <section aria-label="Lifetime" style="margin: 10px 16px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); background: #17405E; border-radius: 16px">
+    <div style="padding: 12px; border-right: 1px solid #23506F"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">142</div><div style="font-size: 12px; color: #9DB7C9">quests</div></div>
+    <div style="padding: 12px; border-right: 1px solid #23506F"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">51</div><div style="font-size: 12px; color: #9DB7C9">victories</div></div>
+    <div style="padding: 12px; border-right: 1px solid #23506F"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">27</div><div style="font-size: 12px; color: #9DB7C9">tiles</div></div>
+    <div style="padding: 12px"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">6</div><div style="font-size: 12px; color: #9DB7C9">raids</div></div>
+  </section>
+
+  <section style="margin: 20px 16px 0">
+    <h2 style="margin: 0 4px 10px; font-size: 15px; font-weight: 700">Mastery by region</h2>
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{mastery}}" as="m" hint-placeholder-count="6">
+        <div style="display: grid; grid-template-columns: 18px 92px 1fr 52px; align-items: center; gap: 10px; padding: 0 4px">
+          <span aria-hidden="true" style="width: 16px; height: 18px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{m.c}}"></span>
+          <span style="font-size: 14px; font-weight: 600">{{m.name}}</span>
+          <div aria-hidden="true" style="height: 8px; border-radius: 4px; background: #17405E"><div style="width: {{m.pct}}%; height: 8px; border-radius: 4px; background: {{m.c}}"></div></div>
+          <span style="font-size: 13px; color: #9DB7C9; text-align: right">{{m.plays}} plays</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin: 22px 16px 0">
+    <h2 style="margin: 0 4px 10px; font-size: 15px; font-weight: 700">Titles</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{titles}}" as="t" hint-placeholder-count="4">
+        <div style="padding: 12px; border-radius: 14px; background: {{t.bg}}; box-shadow: {{t.ring}}">
+          <div style="font-size: 14px; font-weight: 700; color: {{t.fg}}">{{t.name}}</div>
+          <div style="font-size: 12px; color: {{t.sub}}; margin-top: 2px">{{t.how}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin: 22px 16px 0">
+    <h2 style="margin: 0 4px 10px; font-size: 15px; font-weight: 700">Nemesis</h2>
+    <a href="Guild.dc.html" style="display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 14px; background: #17405E; border-radius: 16px; text-decoration: none; color: #EAF2F7">
+      <span aria-hidden="true" style="width: 40px; height: 40px; border-radius: 20px; background: #2E7D4F; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font: 900 20px 'Big Shoulders Display', sans-serif">P</span>
+      <div>
+        <div style="font-size: 16px; font-weight: 700">Priya</div>
+        <div style="font-size: 13px; color: #9DB7C9">She leads 14 to 11 across 27 quests</div>
+      </div>
+      <span style="font: 900 26px 'Big Shoulders Display', sans-serif">11–14</span>
+    </a>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var mastery = [
+      { name: 'Forest', c: '#3E9B5F', plays: 58 },
+      { name: 'Peaks', c: '#C0563A', plays: 27 },
+      { name: 'Meadow', c: '#E3B341', plays: 24 },
+      { name: 'Marsh', c: '#7B5CC4', plays: 15 },
+      { name: 'Reef', c: '#E86A8A', plays: 12 },
+      { name: 'Tundra', c: '#C9D3DB', plays: 6 }
+    ].map(function (m) { return Object.assign({ pct: Math.round((m.plays / 58) * 100) }, m); });
+    var earned = { bg: '#2A2353', fg: '#EAF2F7', sub: '#C7B5F2', ring: 'inset 0 0 0 1.5px #7B5CC4' };
+    var locked = { bg: '#0A2236', fg: '#9DB7C9', sub: '#7E99AC', ring: 'inset 0 0 0 1.5px #1C4462' };
+    var titles = [
+      Object.assign({ name: 'Survived the Galaxy', how: 'Finished a 5-hour raid' }, earned),
+      Object.assign({ name: 'Cartographer', how: 'Explored all six regions' }, earned),
+      Object.assign({ name: 'Bridesmaid', how: '4 of 5 second places in a row' }, locked),
+      Object.assign({ name: 'Kingmaker', how: 'Your last move decided the winner' }, locked)
+    ];
+    return { mastery: mastery, titles: titles };
+  }
+}
+</script>
+</body>
+</html>

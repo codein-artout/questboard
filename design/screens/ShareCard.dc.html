@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Share card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 1200px; height: 630px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <section aria-label="Ciao’s world, 27 tiles" style="position: absolute; left: 40px; top: 70px; width: 500px; height: 480px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="37">
+      <div aria-hidden="true" style="position: absolute; left: {{t.x}}px; top: {{t.y}}px; width: 64px; height: 74px">
+        <div style="position: absolute; inset: -6px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.glow}}"></div>
+        <div style="position: absolute; left: 1px; right: 1px; top: 8px; height: 72px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.side}}"></div>
+        <div style="position: absolute; left: 1px; right: 1px; top: 1px; height: 72px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.face}}"></div>
+      </div>
+    </sc-for>
+  </section>
+  <div style="position: absolute; left: 600px; right: 64px; top: 64px; bottom: 64px; display: flex; flex-direction: column; justify-content: space-between">
+    <div style="font: 900 34px 'Big Shoulders Display', sans-serif; color: #F5C84B">Questboard</div>
+    <div>
+      <div style="font-size: 26px; font-weight: 600; color: #9DB7C9">Quest complete</div>
+      <div style="font: 900 112px/0.92 'Big Shoulders Display', sans-serif; margin-top: 8px">Cascadia</div>
+      <div style="font-size: 30px; font-weight: 600; margin-top: 18px">Priya wins by 3. Ciao takes 2nd.</div>
+    </div>
+    <div style="display: flex; gap: 12px">
+      <span style="height: 48px; padding: 0 20px; border-radius: 24px; display: inline-flex; align-items: center; background: #F5C84B; color: #0F2E45; font-size: 22px; font-weight: 800">+90 XP</span>
+      <span style="height: 48px; padding: 0 20px; border-radius: 24px; display: inline-flex; align-items: center; background: #17405E; font-size: 22px; font-weight: 700">Tile 27: Forest</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1200,"height":630}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var T = { f: ['#3E9B5F', '#245C38'], p: ['#C0563A', '#7A3222'], m: ['#E3B341', '#94711F'], d: ['#7B5CC4', '#4B3582'], r: ['#E86A8A', '#9C3F57'], t: ['#C9D3DB', '#7D8A95'] };
+    var plan = 'fffpmrfpftdfrfpmtffdprfmfdf';
+    var order = [];
+    for (var r = -3; r <= 3; r++) {
+      for (var q = -3; q <= 3; q++) {
+        var s = -q - r;
+        if (Math.abs(s) > 3) continue;
+        order.push({ q: q, r: r, d: Math.max(Math.abs(q), Math.abs(r), Math.abs(s)) });
+      }
+    }
+    var ranked = order.slice().sort(function (a, b) { return a.d - b.d || ((a.q * 7 + a.r * 3) % 5) - ((b.q * 7 + b.r * 3) % 5); });
+    var owned = {};
+    ranked.slice(0, 27).forEach(function (h, i) { owned[h.q + ',' + h.r] = plan.charAt(i); });
+    var w = 64, h = 74, cx = 250, cy = 240;
+    var tiles = order.map(function (hx) {
+      var id = hx.q + ',' + hx.r, k = owned[id];
+      var x = cx + w * (hx.q + hx.r / 2) - w / 2, y = cy + 0.75 * h * hx.r - h / 2;
+      if (!k) return { x: x, y: y, face: 'rgba(255,255,255,0.05)', side: 'rgba(0,0,0,0)', glow: 'rgba(0,0,0,0)' };
+      return { x: x, y: y, face: T[k][0], side: T[k][1], glow: id === '2,-1' ? '#F5C84B' : 'rgba(0,0,0,0)' };
+    });
+    return { tiles: tiles };
+  }
+}
+</script>
+</body>
+</html>

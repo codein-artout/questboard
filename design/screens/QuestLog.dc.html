@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quest log</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <header style="padding: 20px 20px 0">
+    <h1 style="margin: 0; font: 900 34px/1 'Big Shoulders Display', sans-serif; letter-spacing: 0.3px">Quest log</h1>
+  </header>
+  <nav aria-label="Filter quests" style="display: flex; gap: 8px; padding: 14px 20px 14px">
+    <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: 0; background: #F5C84B; color: #0F2E45; font: 700 14px 'Archivo', sans-serif">Friends</button>
+    <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: 1.5px solid #2D5878; background: transparent; color: #EAF2F7; font: 600 14px 'Archivo', sans-serif">Thursday Crew</button>
+    <button style="height: 36px; padding: 0 16px; border-radius: 18px; border: 1.5px solid #2D5878; background: transparent; color: #EAF2F7; font: 600 14px 'Archivo', sans-serif">Mine</button>
+  </nav>
+  <main style="display: flex; flex-direction: column; gap: 10px; padding: 0 16px">
+    <sc-for list="{{quests}}" as="q" hint-placeholder-count="3">
+      <article style="background: #17405E; border-radius: 16px; padding: 14px">
+        <div style="display: flex; gap: 12px; align-items: flex-start">
+          <div aria-hidden="true" style="position: relative; width: 44px; height: 52px; flex: none">
+            <div style="position: absolute; left: 0; right: 0; top: 5px; height: 47px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{q.side}}"></div>
+            <div style="position: absolute; left: 0; right: 0; top: 0; height: 47px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{q.face}}; display: flex; align-items: center; justify-content: center">
+              <svg width="18" height="18" viewBox="0 0 24 24"><path d="{{q.icon}}" fill="{{q.ink}}"></path></svg>
+            </div>
+          </div>
+          <div style="flex: 1; min-width: 0">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+              <h2 style="margin: 0; font: 800 24px/1.05 'Big Shoulders Display', sans-serif; letter-spacing: 0.2px">{{q.game}}</h2>
+              <span style="font-size: 12px; color: #9DB7C9; white-space: nowrap">{{q.when}}</span>
+            </div>
+            <p style="margin: 3px 0 0; font-size: 13px; color: #9DB7C9">{{q.meta}}</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 12px">
+          <div style="display: flex">
+            <sc-for list="{{q.party}}" as="p" hint-placeholder-count="4">
+              <span style="width: 28px; height: 28px; border-radius: 14px; margin-right: -6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: {{p.bg}}; color: {{p.fg}}; box-shadow: 0 0 0 2px #17405E, {{p.crown}}">{{p.initial}}</span>
+            </sc-for>
+          </div>
+          <span style="margin-left: 6px; font-size: 15px; font-weight: 700">{{q.outcome}}</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px">
+          <sc-for list="{{q.rewards}}" as="r" hint-placeholder-count="2">
+            <span style="height: 28px; padding: 0 10px; border-radius: 14px; display: inline-flex; align-items: center; font-size: 12px; font-weight: 700; background: {{r.bg}}; color: {{r.fg}}">{{r.label}}</span>
+          </sc-for>
+        </div>
+      </article>
+    </sc-for>
+  </main>
+  <nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: #0A2236; border-top: 1px solid #1C4462; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; padding-top: 8px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 20.5 7v10L12 22 3.5 17V7z"></path></svg>World</a>
+    <a href="QuestLog.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #F5C84B; font-size: 11px; font-weight: 700; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>Quests</a>
+    <a href="LogPlay.dc.html" aria-label="Log a quest" style="justify-self: center; margin-top: -26px; width: 62px; height: 62px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #0F2E45; background: #F5C84B; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></a>
+    <a href="Guild.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4a1 1 0 0 1 1-1h13l-3 5 3 5H5"></path></svg>Guild</a>
+    <a href="Character.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Me</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var T = {
+      forest: { c: '#3E9B5F', s: '#245C38', ink: '#FFFFFF', icon: 'M12 2 18 11h-3.5l4.5 7H5l4.5-7H6z' },
+      peaks:  { c: '#C0563A', s: '#7A3222', ink: '#FFFFFF', icon: 'M2 19 9 7l4 6 2.5-3.5L22 19z' },
+      meadow: { c: '#E3B341', s: '#94711F', ink: '#3A2A05', icon: 'M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z' }
+    };
+    var P = {
+      Priya: ['#2E7D4F', '#FFFFFF'], Ciao: ['#2459B8', '#FFFFFF'], Ravi: ['#C8323B', '#FFFFFF'],
+      Meera: ['#E8A80C', '#1B1F3B'], Kabir: ['#FFFFFF', '#1B1F3B'], Arjun: ['#6A3FA5', '#FFFFFF']
+    };
+    function party(names, winner) {
+      return names.map(function (n) {
+        return { initial: n.charAt(0), bg: P[n][0], fg: P[n][1], crown: n === winner ? '0 0 0 4px #F5C84B' : '0 0 0 0 transparent' };
+      });
+    }
+    var gold = { bg: '#F5C84B', fg: '#0F2E45' }, plain = { bg: '#0F2E45', fg: '#EAF2F7' }, rare = { bg: '#7B5CC4', fg: '#FFFFFF' };
+    function chip(style, label) { return { bg: style.bg, fg: style.fg, label: label }; }
+    function quest(t, data) { return Object.assign({ face: T[t].c, side: T[t].s, ink: T[t].ink, icon: T[t].icon }, data); }
+    var quests = [
+      quest('forest', { game: 'Cascadia', when: '9:40 PM', meta: 'Thursday Crew at Priya’s, 48 min',
+        party: party(['Priya', 'Ciao', 'Ravi', 'Meera'], 'Priya'), outcome: 'Priya wins by 3',
+        rewards: [chip(gold, '+90 XP'), chip(plain, 'Forest tile'), chip(rare, 'Bridesmaid 4 of 5')] }),
+      quest('peaks', { game: 'Twilight Imperium', when: 'Sat', meta: 'Raid with Arjun, Kabir and Ravi, 5 h 20 min',
+        party: party(['Arjun', 'Kabir', 'Ravi', 'Ciao'], 'Kabir'), outcome: 'Kabir takes the throne',
+        rewards: [chip(gold, '+240 XP raid'), chip(rare, 'Title: Survived the Galaxy')] }),
+      quest('meadow', { game: 'The Crew', when: 'Sun', meta: 'Thursday Crew, mission 23',
+        party: party(['Meera', 'Kabir', 'Ciao', 'Ravi'], ''), outcome: 'Mission complete, together',
+        rewards: [chip(gold, '+70 XP each'), chip(plain, 'Meadow tile')] })
+    ];
+    return { quests: quests };
+  }
+}
+</script>
+</body>
+</html>

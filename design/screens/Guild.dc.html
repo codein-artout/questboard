@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Thursday Crew guild</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <section style="padding: 24px 20px 0">
+    <div style="font-size: 14px; color: #9DB7C9">Guild</div>
+    <h1 style="margin: 2px 0 0; font: 900 40px/1 'Big Shoulders Display', sans-serif">Thursday Crew</h1>
+    <div style="display: flex; align-items: center; gap: 10px; margin-top: 12px">
+      <div style="display: flex">
+        <sc-for list="{{members}}" as="m" hint-placeholder-count="6">
+          <span style="width: 30px; height: 30px; border-radius: 15px; margin-right: -6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: {{m.bg}}; color: {{m.fg}}; box-shadow: 0 0 0 2px #0F2E45">{{m.initial}}</span>
+        </sc-for>
+      </div>
+      <span style="margin-left: 8px; font-size: 14px; color: #9DB7C9">6 members, 58 quests together</span>
+    </div>
+  </section>
+
+  <section aria-label="Shared guild world, 19 tiles" style="position: relative; height: 112px; margin: 14px 16px 0">
+    <sc-for list="{{strip}}" as="t" hint-placeholder-count="19">
+      <div aria-hidden="true" style="position: absolute; left: {{t.x}}px; top: {{t.y}}px; width: 30px; height: 35px">
+        <div style="position: absolute; left: 0; right: 0; top: 4px; height: 34px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.side}}"></div>
+        <div style="position: absolute; left: 0; right: 0; top: 0; height: 34px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.face}}"></div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="margin: 6px 16px 0; background: #F5C84B; color: #0F2E45; border-radius: 16px; padding: 16px">
+    <div style="font-size: 13px; font-weight: 600">Next quest</div>
+    <div style="font: 900 26px/1.05 'Big Shoulders Display', sans-serif; margin-top: 2px">Thursday at Ravi’s</div>
+    <div style="font-size: 14px; margin-top: 4px">4 going. Kabir hasn’t answered.</div>
+    <div style="display: flex; gap: 8px; margin-top: 14px">
+      <button style="flex: 1; height: 44px; border-radius: 22px; border: 0; background: #0F2E45; color: #F5C84B; font: 700 15px 'Archivo', sans-serif">I’m in</button>
+      <button style="flex: 1; height: 44px; border-radius: 22px; border: 1.5px solid #0F2E45; background: transparent; color: #0F2E45; font: 700 15px 'Archivo', sans-serif">Can’t make it</button>
+    </div>
+  </section>
+
+  <section style="margin: 12px 16px 0; background: #17405E; border-radius: 16px; padding: 4px 0">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 12px 16px 6px">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 700">Autumn campaign, week 6 of 10</h2>
+      <span style="font-size: 12px; color: #9DB7C9">Campaign XP</span>
+    </div>
+    <ol style="list-style: none; margin: 0; padding: 0">
+      <sc-for list="{{standings}}" as="s" hint-placeholder-count="5">
+        <li style="display: grid; grid-template-columns: 22px 30px 1fr auto; align-items: center; gap: 10px; padding: 8px 16px; border-top: 1px solid #23506F">
+          <span style="font: 800 18px 'Big Shoulders Display', sans-serif; color: {{s.rankColor}}">{{s.rank}}</span>
+          <span style="width: 28px; height: 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: {{s.bg}}; color: {{s.fg}}">{{s.initial}}</span>
+          <span style="font-size: 15px; font-weight: 600">{{s.name}} <span style="font-size: 12px; font-weight: 500; color: #9DB7C9">{{s.cls}}</span></span>
+          <span style="font: 900 20px 'Big Shoulders Display', sans-serif">{{s.xp}}</span>
+        </li>
+      </sc-for>
+    </ol>
+  </section>
+
+  <nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: #0A2236; border-top: 1px solid #1C4462; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; padding-top: 8px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 20.5 7v10L12 22 3.5 17V7z"></path></svg>World</a>
+    <a href="QuestLog.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>Quests</a>
+    <a href="LogPlay.dc.html" aria-label="Log a quest" style="justify-self: center; margin-top: -26px; width: 62px; height: 62px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #0F2E45; background: #F5C84B; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></a>
+    <a href="Guild.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #F5C84B; font-size: 11px; font-weight: 700; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4a1 1 0 0 1 1-1h13l-3 5 3 5H5"></path></svg>Guild</a>
+    <a href="Character.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>Me</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var face = { f: ['#3E9B5F', '#245C38'], p: ['#C0563A', '#7A3222'], m: ['#E3B341', '#94711F'], d: ['#7B5CC4', '#4B3582'], r: ['#E86A8A', '#9C3F57'], t: ['#C9D3DB', '#7D8A95'] };
+    var rows = ['fmdmfpr', 'mfpfmdmf', 'rmfdm'];
+    var strip = [];
+    rows.forEach(function (row, ri) {
+      var startX = ri === 1 ? 50 : (ri === 0 ? 65 : 95);
+      row.split('').forEach(function (k, ci) {
+        strip.push({ x: startX + ci * 30, y: 6 + ri * 26, face: face[k][0], side: face[k][1] });
+      });
+    });
+    var people = [
+      ['Priya', '#2E7D4F', '#FFFFFF', 'Strategist', 640],
+      ['Ciao', '#2459B8', '#FFFFFF', 'Architect', 610],
+      ['Ravi', '#C8323B', '#FFFFFF', 'Warlord', 520],
+      ['Meera', '#E8A80C', '#1B1F3B', 'Warden', 495],
+      ['Kabir', '#FFFFFF', '#1B1F3B', 'Trickster', 380],
+      ['Arjun', '#6A3FA5', '#FFFFFF', 'Oracle', 290]
+    ];
+    var members = people.map(function (p) { return { initial: p[0].charAt(0), bg: p[1], fg: p[2] }; });
+    var standings = people.slice(0, 5).map(function (p, i) {
+      return { rank: i + 1, rankColor: i === 0 ? '#F5C84B' : '#9DB7C9', name: p[0], initial: p[0].charAt(0), bg: p[1], fg: p[2], cls: p[3], xp: p[4] };
+    });
+    return { strip: strip, members: members, standings: standings };
+  }
+}
+</script>
+</body>
+</html>

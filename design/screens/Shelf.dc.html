@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Shelf of shame</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <header style="padding: 24px 20px 0">
+    <h1 style="margin: 0; font: 900 38px/1 'Big Shoulders Display', sans-serif">Shelf of shame</h1>
+    <p style="margin: 6px 0 0; font-size: 14px; color: #9DB7C9">5 games you own and haven’t played. Each one is an uncharted island with a bounty.</p>
+  </header>
+
+  <section style="margin: 16px 16px 0; padding: 14px 16px; border-radius: 16px; background: #17405E">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 700">Thursday at yours: what to play?</h2>
+      <span style="font-size: 12px; color: #9DB7C9">4 voted</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px">
+      <sc-for list="{{votes}}" as="v" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center">
+          <div>
+            <div style="font-size: 14px; font-weight: 600">{{v.name}}</div>
+            <div aria-hidden="true" style="height: 6px; margin-top: 4px; border-radius: 3px; background: #0F2E45"><div style="width: {{v.pct}}%; height: 6px; border-radius: 3px; background: {{v.bar}}"></div></div>
+          </div>
+          <span style="font: 800 18px 'Big Shoulders Display', sans-serif">{{v.count}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin: 14px 16px 0; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{shelf}}" as="g" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 14px; background: #17405E">
+        <div aria-hidden="true" style="position: relative; width: 40px; height: 46px">
+          <div style="position: absolute; inset: 0; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{g.tint}}"></div>
+          <div style="position: absolute; inset: 3px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #17405E; display: flex; align-items: center; justify-content: center; font: 900 18px 'Big Shoulders Display', sans-serif; color: {{g.tint}}">?</div>
+        </div>
+        <div style="min-width: 0">
+          <div style="font: 800 20px/1.05 'Big Shoulders Display', sans-serif">{{g.name}}</div>
+          <div style="font-size: 12px; color: #9DB7C9; margin-top: 2px">{{g.meta}}</div>
+        </div>
+        <button style="height: 44px; padding: 0 12px; border-radius: 22px; border: 1.5px solid #F5C84B; background: transparent; color: #F5C84B; font: 700 13px 'Archivo', sans-serif; white-space: nowrap">{{g.cta}}</button>
+      </div>
+    </sc-for>
+  </section>
+
+  <nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: #0A2236; border-top: 1px solid #1C4462; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; padding-top: 8px">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 20.5 7v10L12 22 3.5 17V7z"></path></svg>Island</a>
+    <a href="QuestLog.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>Quests</a>
+    <a href="LogPlay.dc.html" aria-label="Log a quest" style="justify-self: center; margin-top: -26px; width: 62px; height: 62px; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #0F2E45; background: #F5C84B; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></a>
+    <a href="Shelf.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #F5C84B; font-size: 11px; font-weight: 700; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"></path><path d="M3 18h18"></path><path d="M6 6v12"></path><path d="M10 9v9"></path><path d="M14 6v12"></path><path d="m17 8 3 10"></path></svg>Shelf</a>
+    <a href="Guild.dc.html" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: #9DB7C9; font-size: 11px; font-weight: 600; min-height: 44px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22V4a1 1 0 0 1 1-1h13l-3 5 3 5H5"></path></svg>Guild</a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var votes = [
+      { name: 'Sky Team', count: 3, pct: 75, bar: '#F5C84B' },
+      { name: 'Cascadia', count: 1, pct: 25, bar: '#3E9B5F' },
+      { name: 'Arcs', count: 0, pct: 0, bar: '#C0563A' }
+    ];
+    var shelf = [
+      { name: 'Sky Team', tint: '#E3B341', meta: 'Owned since August, +80 XP bounty', cta: 'In the vote' },
+      { name: 'Arcs', tint: '#C0563A', meta: 'Owned since May, +80 XP bounty', cta: 'Propose' },
+      { name: 'Heat', tint: '#E86A8A', meta: 'Owned since March, +100 XP bounty', cta: 'Propose' },
+      { name: 'Lost Ruins of Arnak', tint: '#3E9B5F', meta: 'Owned since January, +120 XP bounty', cta: 'Propose' },
+      { name: 'Earthborne Rangers', tint: '#E3B341', meta: 'Owned for a year, +150 XP bounty', cta: 'Propose' }
+    ];
+    return { votes: votes, shelf: shelf };
+  }
+}
+</script>
+</body>
+</html>

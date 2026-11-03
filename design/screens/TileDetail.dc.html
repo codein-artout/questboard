@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cascadia tile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400..800&amp;family=Big+Shoulders+Display:wght@600..900&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#F5C84B}a:hover{color:#FFE08A}
+</style>
+</helmet>
+<div style="width: 390px; height: 1040px; position: relative; overflow: hidden; background: #0F2E45; color: #EAF2F7; font-family: 'Archivo', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+  <header style="display: flex; justify-content: space-between; padding: 12px 12px 0">
+    <a href="Main.dc.html" aria-label="Back to your island" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #EAF2F7">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg></a>
+    <a href="LogPlay.dc.html" style="height: 44px; padding: 0 16px; border-radius: 22px; background: #F5C84B; color: #0F2E45; display: flex; align-items: center; text-decoration: none; font-size: 14px; font-weight: 800">Log a play</a>
+  </header>
+
+  <section style="display: flex; gap: 18px; align-items: center; padding: 6px 20px 0">
+    <div aria-hidden="true" style="position: relative; width: 104px; height: 128px; flex: none">
+      <div style="position: absolute; left: 0; right: 0; top: 12px; height: 116px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #245C38"></div>
+      <div style="position: absolute; left: 0; right: 0; top: 0; height: 116px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: #3E9B5F; display: flex; align-items: center; justify-content: center">
+        <svg width="64" height="64" viewBox="0 0 24 24"><path d="M1 9h2v2h2V9h2v11H1z M17 9h2v2h2V9h2v11h-6z M7 13h10v7H7z M9.5 4h1.5v1.5h2V4h1.5v9h-5z" fill="#FFFFFF"></path></svg>
+      </div>
+    </div>
+    <div>
+      <h1 style="margin: 0; font: 900 44px/0.95 'Big Shoulders Display', sans-serif">Cascadia</h1>
+      <p style="margin: 6px 0 0; font-size: 15px; font-weight: 700">Citadel, 52 plays</p>
+      <p style="margin: 2px 0 0; font-size: 13px; color: #9DB7C9">48 more for a Wonder. Forest region.</p>
+    </div>
+  </section>
+
+  <section aria-label="Tiers" style="margin: 18px 16px 0; padding: 14px 10px 10px; background: #17405E; border-radius: 16px">
+    <ol style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px">
+      <sc-for list="{{tiers}}" as="t" hint-placeholder-count="6">
+        <li style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+          <div style="width: 40px; height: 46px; clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%); background: {{t.face}}; display: flex; align-items: center; justify-content: center; box-shadow: none">
+            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="{{t.path}}" fill="{{t.ink}}"></path></svg>
+          </div>
+          <span style="font-size: 12px; font-weight: 700; color: {{t.labelColor}}">{{t.name}}</span>
+          <span style="font-size: 11px; color: #9DB7C9">{{t.at}}</span>
+        </li>
+      </sc-for>
+    </ol>
+  </section>
+
+  <section style="margin: 10px 16px 0; padding: 14px 16px; border-radius: 16px; background: #F5C84B; color: #0F2E45; display: flex; gap: 12px; align-items: center">
+    <svg width="34" height="34" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 3L12 4l4.5 7L21 8l-2 10H5z" fill="#0F2E45"></path></svg>
+    <div style="flex: 1">
+      <div style="font-size: 13px; font-weight: 600">Thursday Crew crown</div>
+      <div style="font: 900 22px/1.05 'Big Shoulders Display', sans-serif">Priya holds it with 104</div>
+      <div style="font-size: 13px; margin-top: 2px">Your best is 98. Six points to take it.</div>
+    </div>
+  </section>
+
+  <section aria-label="Your records" style="margin: 10px 16px 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #17405E; border-radius: 16px">
+    <div style="padding: 12px; border-right: 1px solid #23506F"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">98</div><div style="font-size: 12px; color: #9DB7C9">personal best</div></div>
+    <div style="padding: 12px; border-right: 1px solid #23506F"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">86</div><div style="font-size: 12px; color: #9DB7C9">average</div></div>
+    <div style="padding: 12px"><div style="font: 900 26px 'Big Shoulders Display', sans-serif">42%</div><div style="font-size: 12px; color: #9DB7C9">wins</div></div>
+  </section>
+
+  <section style="margin: 10px 16px 0; padding: 14px 16px; background: #17405E; border-radius: 16px">
+    <h2 style="margin: 0; font-size: 15px; font-weight: 700">You taught it to 9 people</h2>
+    <p style="margin: 2px 0 10px; font-size: 13px; color: #9DB7C9">It spread from them to 4 more islands.</p>
+    <div style="display: flex">
+      <sc-for list="{{taught}}" as="p" hint-placeholder-count="9">
+        <span style="width: 30px; height: 30px; border-radius: 15px; margin-right: -6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; background: {{p.bg}}; color: {{p.fg}}; box-shadow: 0 0 0 2px #17405E">{{p.initial}}</span>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="margin: 10px 16px 0; padding: 4px 0; background: #17405E; border-radius: 16px">
+    <h2 style="margin: 0; padding: 12px 16px 6px; font-size: 15px; font-weight: 700">House records at your place</h2>
+    <sc-for list="{{records}}" as="rec" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 10px 16px; border-top: 1px solid #23506F">
+        <div>
+          <div style="font-size: 14px; font-weight: 600">{{rec.what}}</div>
+          <div style="font-size: 12px; color: #9DB7C9">{{rec.who}}</div>
+        </div>
+        <span style="font: 900 22px 'Big Shoulders Display', sans-serif">{{rec.value}}</span>
+      </div>
+    </sc-for>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1040}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var B = [
+      ['Outpost', '1', 'M10 3h1.6v17H10z M11.6 3l7 3.2-7 3.2z'],
+      ['Village', '5', 'M2 14l5-5 5 5v6H2z M11 12.5l5.5-5.5 5.5 5.5V20H11z'],
+      ['Town', '10', 'M1 15l3.5-3.5L8 15v5H1z M7.5 12.5 12 8l4.5 4.5V20h-9z M17 7h5v13h-5z M17 7l2.5-3L22 7z'],
+      ['Keep', '25', 'M6 5h2.5v2.5H11V5h2v2.5h2.5V5H18v15H6z'],
+      ['Citadel', '50', 'M1 9h2v2h2V9h2v11H1z M17 9h2v2h2V9h2v11h-6z M7 13h10v7H7z M9.5 4h1.5v1.5h2V4h1.5v9h-5z'],
+      ['Wonder', '100', 'M12 1l2.6 7h-1.2v10h-2.8V8H9.4z M5 18h14v3H5z M3 21h18v2H3z']
+    ];
+    var current = 4;
+    var tiers = B.map(function (b, i) {
+      var done = i <= current;
+      return { name: b[0], at: b[1] + (b[1] === '1' ? ' play' : ' plays'), path: b[2],
+        face: i === current ? '#F5C84B' : done ? '#3E9B5F' : '#0F2E45', ink: i === current ? '#0F2E45' : done ? '#FFFFFF' : '#5F7E93',
+        labelColor: done ? '#EAF2F7' : '#9DB7C9' };
+    });
+    var colors = [['#2E7D4F', '#FFFFFF'], ['#C8323B', '#FFFFFF'], ['#E8A80C', '#1B1F3B'], ['#FFFFFF', '#1B1F3B'], ['#6A3FA5', '#FFFFFF'], ['#E0662A', '#1B1F3B'], ['#23252B', '#FFFFFF'], ['#C8323B', '#FFFFFF'], ['#2E7D4F', '#FFFFFF']];
+    var names = 'PRMKAJSNT';
+    var taught = colors.map(function (c, i) { return { initial: names.charAt(i), bg: c[0], fg: c[1] }; });
+    var records = [
+      { what: 'Highest score', who: 'Priya, in March', value: '104' },
+      { what: 'Fastest game', who: '4 players, in August', value: '31 min' },
+      { what: 'Biggest comeback', who: 'Ravi, last after the first half', value: '+14' }
+    ];
+    return { tiers: tiers, taught: taught, records: records };
+  }
+}
+</script>
+</body>
+</html>
