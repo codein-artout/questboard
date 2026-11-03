@@ -64,13 +64,7 @@ export function HexTile({ width, className, style, ...v }: HexTileVisual & { wid
         {isGame && tier > 0 ? <TierBuilding tier={tier} size={buildingSize} color={ink} /> : null}
         {v.kind === "ghost" && tier === 0 ? <TierBuilding tier={1} size={buildingSize} color={ink} /> : null}
         {isGame && v.showText !== false && v.text ? (
-          <span
-            aria-hidden
-            className={cn("font-display font-extrabold text-center", v.fullName ? "line-clamp-2" : "truncate")}
-            style={{ color: ink, fontSize, lineHeight: v.fullName ? 1.02 : 1, maxWidth: (v.fullName ? 62 : 66) * s, overflowWrap: "anywhere" }}
-          >
-            {v.text}
-          </span>
+          <TileLabel text={v.text} color={ink} fontSize={fontSize} maxWidth={(v.fullName ? 62 : 66) * s} twoLines={!!v.fullName} />
         ) : null}
       </div>
       {v.kind === "ghost" ? (
@@ -128,5 +122,39 @@ export function TileBadge({ terrain, tier, width, kind = "game", halo = false }:
         )}
       </div>
     </div>
+  );
+}
+
+/** Wraps a name into at most two lines that fit a width (Big Shoulders is condensed: ~0.47em per char). */
+export function wrapLabel(text: string, maxChars: number, twoLines: boolean): string[] {
+  const clip = (t: string) => (t.length <= maxChars ? t : `${t.slice(0, Math.max(1, maxChars - 1)).trimEnd()}…`);
+  if (!twoLines || text.length <= maxChars) return [clip(text)];
+  const words = text.split(/\s+/);
+  let first = "";
+  let i = 0;
+  while (i < words.length && `${first} ${words[i]}`.trim().length <= maxChars) first = `${first} ${words[i++]}`.trim();
+  if (!first) return [clip(text)];
+  const rest = words.slice(i).join(" ");
+  return rest ? [first, clip(rest)] : [first];
+}
+
+/**
+ * The monogram or name on a tile. Drawn as SVG text: it's a decorative
+ * duplicate of the tile button's accessible name (which carries the full name,
+ * tier and plays), and it keeps the exact terrain ink colors from the design.
+ */
+function TileLabel({ text, color, fontSize, maxWidth, twoLines }: { text: string; color: string; fontSize: number; maxWidth: number; twoLines: boolean }) {
+  const maxChars = Math.max(3, Math.floor(maxWidth / (fontSize * 0.47)));
+  const lines = wrapLabel(text, maxChars, twoLines);
+  const lineH = fontSize * 1.02;
+  const h = Math.ceil(lineH * lines.length + 2);
+  return (
+    <svg aria-hidden width={maxWidth} height={h} viewBox={`0 0 ${maxWidth} ${h}`} style={{ overflow: "visible" }}>
+      {lines.map((l, i) => (
+        <text key={i} x={maxWidth / 2} y={lineH * (i + 1) - fontSize * 0.18} textAnchor="middle" fill={color} style={{ fontFamily: "var(--font-big-shoulders), sans-serif", fontWeight: 800, fontSize }}>
+          {l}
+        </text>
+      ))}
+    </svg>
   );
 }

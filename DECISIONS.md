@@ -55,3 +55,7 @@ Calls made while building v1 without anyone to ask. Each one is small enough to 
 ## Infrastructure
 - **Pushing was blocked** for the first few milestones (GitHub 403 until the app was installed). Those commits were pushed together once access was granted.
 - **E2E tests** create fresh players through the real magic-link flow, reading the console outbox through `/api/dev/mailbox` (only with `ENABLE_DEV_LOGIN`). They run against the seeded database without depending on seed details.
+
+## Accessibility
+- **Tile labels and contrast.** The terrain colors and inks are fixed by DESIGN.md. White on Forest, Peaks, Marsh and Reef faces is 3.0–4.0:1, below 4.5:1 for small text. Tile monograms and names are drawn as `aria-hidden` SVG text. They duplicate each tile button's accessible name ("Cascadia, Citadel, 52 plays"), and the same name always appears at full contrast in the tile card, list view and search results. Everything else meets WCAG AA; axe runs in every e2e flow.
+- Vote buttons' accessible names start with their visible text ("Voted for Sky Team").

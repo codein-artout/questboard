@@ -48,7 +48,7 @@ export function VoteCard({ title, votes, voterCount, votesLeft, canVote, limit }
                       })
                     }
                     className={cn("h-9 rounded-full px-3 text-xs font-bold disabled:opacity-40", v.mine ? "bg-gold text-sea" : "border-[1.5px] border-outline text-text")}
-                    aria-label={`${v.mine ? "Take back your vote for" : "Vote for"} ${v.name}`}
+                    aria-label={`${v.mine ? "Voted" : "Vote"} for ${v.name}`}
                   >
                     {v.mine ? "Voted" : "Vote"}
                   </button>

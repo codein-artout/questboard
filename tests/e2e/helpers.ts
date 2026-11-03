@@ -61,6 +61,8 @@ export async function logQuest(page: Page, game: string, party: { name?: string;
   }
   for (const p of party) {
     if (!p.name && !p.guest) continue;
+    // Already in the party (e.g. preloaded from a game night's RSVPs)?
+    if (p.name && (await page.getByRole("button", { name: `Remove ${p.name}` }).count())) continue;
     if (!(await page.getByLabel("Find a friend or type a guest’s name").isVisible().catch(() => false))) {
       await page.getByRole("button", { name: "Add a party member or guest" }).click();
     }

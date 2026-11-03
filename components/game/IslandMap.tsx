@@ -316,25 +316,27 @@ export function IslandMap({
                 </div>
               );
             }
+            // The visual tile sits beside an empty button that carries the
+            // accessible name, so the decorative label never competes with it.
             return (
-              <button
-                key={t.key}
-                ref={(el) => {
-                  if (el) tileRefs.current.set(t.key, el);
-                  else tileRefs.current.delete(t.key);
-                }}
-                type="button"
-                data-tile={t.key}
-                aria-label={t.label}
-                aria-pressed={t.key === selectedKey}
-                tabIndex={t.key === tabKey ? 0 : -1}
-                onClick={() => select(t.key)}
-                onKeyDown={(e) => onTileKey(e, t.key)}
-                className="block cursor-pointer border-0 bg-transparent p-0 focus-visible:outline-offset-4"
-                style={style}
-              >
-                {visual}
-              </button>
+              <div key={t.key} style={style}>
+                <div aria-hidden>{visual}</div>
+                <button
+                  ref={(el) => {
+                    if (el) tileRefs.current.set(t.key, el);
+                    else tileRefs.current.delete(t.key);
+                  }}
+                  type="button"
+                  data-tile={t.key}
+                  aria-label={t.label}
+                  aria-pressed={t.key === selectedKey}
+                  tabIndex={t.key === tabKey ? 0 : -1}
+                  onClick={() => select(t.key)}
+                  onKeyDown={(e) => onTileKey(e, t.key)}
+                  className="hex absolute inset-0 block cursor-pointer border-0 bg-transparent p-0 focus-visible:bg-white/15 focus-visible:outline-none"
+                  style={{ height: (86 * baseSize) / 76 }}
+                />
+              </div>
             );
           })}
         </div>

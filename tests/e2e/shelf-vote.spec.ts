@@ -33,7 +33,7 @@ test("shelf game proposed to a game night, voted on, then logged with a bounty",
   await a.page.getByRole("button", { name: "Propose" }).first().click();
   await expect(a.page.getByText("In the vote")).toBeVisible();
   await a.page.getByRole("button", { name: "Vote for Sky Team" }).click();
-  await expect(a.page.getByRole("button", { name: "Take back your vote for Sky Team" })).toBeVisible();
+  await expect(a.page.getByRole("button", { name: "Voted for Sky Team" })).toBeVisible();
 
   await b.page.goto(nightUrl);
   await b.page.getByRole("button", { name: "Going" }).click();
@@ -42,8 +42,8 @@ test("shelf game proposed to a game night, voted on, then logged with a bounty",
   await expectAccessible(b.page, "game night");
 
   // Log from tonight: the vote leads the suggestions.
-  await a.page.goto(nightUrl);
-  await a.page.getByRole("link", { name: "Log a quest from tonight" }).click();
+  // Full-page log for this night (the link opens it as a modal on desktop).
+  await a.page.goto(`/log?night=${nightUrl.split("/").pop()}`);
   await expect(a.page.getByText(/From the E2E night vote/)).toBeVisible();
   await a.page.getByRole("button", { name: "Sky Team" }).first().click();
   await logQuest(a.page, "Sky Team", [{}, { name: b.user.name }], { coopWin: true, pickSuggestion: true });
