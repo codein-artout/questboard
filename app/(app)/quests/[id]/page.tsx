@@ -5,7 +5,7 @@ import { CONFIRMATION, TERRAIN_INFO, type Terrain } from "@/game/config";
 import { ordinal } from "@/game/places";
 import type { QuestOutcomePayload } from "@/game/types";
 import { db } from "@/lib/db";
-import { clockTime, duration, fmtScore, relativeDay, tzOffsetMinutes } from "@/lib/format";
+import { clockTime, dayPhrase, duration, fmtScore, relativeDay, tzOffsetMinutes } from "@/lib/format";
 import { canConfirmQuest, canDisputeQuest, canEditQuest, canInteract, canViewQuest, type QuestAccess } from "@/lib/permissions";
 import { getViewer, toViewer } from "@/lib/session";
 import { storage } from "@/lib/storage";
@@ -107,7 +107,7 @@ export default async function QuestDetail({ params }: Props) {
         <Panel className="mt-3 p-4 shadow-[inset_0_0_0_1.5px_#2D5878]">
           <h2 className="m-0 text-[15px] font-bold">Waiting for confirmation</h2>
           <p className="m-0 mt-1 text-sm text-muted">
-            {waiting.length ? `Waiting on ${waiting.join(", ")}. ` : ""}It confirms itself {relativeDay(autoAt, new Date(), tz).toLowerCase()} at {clockTime(autoAt, tz)} if nobody disputes it.
+            {waiting.length ? `Waiting on ${waiting.join(", ")}. ` : ""}It confirms itself {dayPhrase(autoAt, new Date(), tz)} at {clockTime(autoAt, tz)} if nobody disputes it.
           </p>
           {canConfirm || canDispute ? <ConfirmDispute questId={q.id} canConfirm={canConfirm} canDispute={canDispute} /> : null}
         </Panel>

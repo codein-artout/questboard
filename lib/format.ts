@@ -87,3 +87,8 @@ export function tzOffsetMinutes(timeZone: string, at = new Date()): number {
     return 0;
   }
 }
+
+/** relativeDay for use mid-sentence: "today", "yesterday", "last Friday", "Friday", "17 Jan". */
+export function dayPhrase(d: Date, now = new Date(), tz = 0): string {
+  return relativeDay(d, now, tz).replace(/^(Today|Yesterday|Last)\b/, (m) => m.toLowerCase());
+}
