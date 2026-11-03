@@ -5,6 +5,7 @@
  * teaching chains and tier-ups. Deterministic (seeded PRNG). Ends with a full
  * recompute of derived state.
  */
+import "../scripts/env";
 import { PrismaClient, type PlayerColor, type Prisma } from "@prisma/client";
 import { CONFIRMATION } from "../game/config";
 import { computePlaces } from "../lib/quest-places";

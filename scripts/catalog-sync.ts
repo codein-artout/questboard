@@ -3,6 +3,7 @@
  * and wikidata ids, never touches custom games, and links expansions to their
  * base games. Run by `pnpm db:setup`; safe to run any time.
  */
+import "./env";
 import { db } from "../lib/db";
 import { loadCatalog, toGameRow } from "../lib/catalog/load";
 

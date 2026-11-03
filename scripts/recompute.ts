@@ -1,4 +1,5 @@
 /** pnpm game:recompute — rebuild every piece of derived state from history. */
+import "./env";
 import { db } from "../lib/db";
 import { recompute } from "../server/recompute";
 

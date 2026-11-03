@@ -1,4 +1,5 @@
 /** pnpm jobs:imports — process queued or stalled import jobs locally. */
+import "./env";
 import { db } from "../lib/db";
 import { processPendingImports } from "../server/imports";
 
