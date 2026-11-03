@@ -31,6 +31,7 @@ export function autoMonogram(name: string): string {
   if (words.length === 2) {
     const [first, last] = words as [string, string];
     if (last.length <= MONOGRAM_MAX - 3) return `${first[0]!.toUpperCase()}. ${last}`;
+    if (first.length <= 3) return clip(`${first} ${last}`, MONOGRAM_MAX);
     if (first.length <= MONOGRAM_MAX) return first;
   }
   if (words.length >= 2 && words[0]!.length <= MONOGRAM_MAX) return words[0]!;
