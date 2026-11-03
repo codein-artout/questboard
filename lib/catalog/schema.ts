@@ -31,6 +31,8 @@ export const catalogEntrySchema = z
     mechanics: z.array(z.enum(MECHANICS)).max(16),
     scoring: scoringInput,
     baseGame: z.string().nullable(),
+    /** Optional Wikidata item id, filled by scripts/enrich-wikidata.ts. */
+    wikidataId: z.string().regex(/^Q\d+$/).nullable().optional(),
   })
   .strict()
   .superRefine((g, ctx) => {

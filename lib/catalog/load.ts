@@ -38,5 +38,6 @@ export function toGameRow(e: CatalogEntry) {
     scoring: SCORING_FROM_CATALOG[e.scoring],
     terrain: deriveTerrain({ categories: e.categories, mechanics: e.mechanics, maxPlayers: e.maxPlayers }),
     searchText: searchTextFor(e.name, e.altNames),
+    wikidataId: e.wikidataId ?? null,
   };
 }
