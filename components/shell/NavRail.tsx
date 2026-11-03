@@ -16,7 +16,7 @@ export function isActive(pathname: string, href: string, handle?: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-const item = "flex h-11 items-center gap-3 rounded-xl px-3 text-[15px] no-underline transition-colors";
+const item = "flex h-11 items-center gap-3 whitespace-nowrap rounded-xl px-3 text-[15px] no-underline transition-colors";
 
 export function NavRail({ viewer }: { viewer: ShellViewer }) {
   const pathname = usePathname();
