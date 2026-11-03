@@ -26,3 +26,32 @@ Calls made while building v1 without anyone to ask. Each one is small enough to 
 - **Night Owl**: quest end (start + duration) in local time between 00:00 and 05:00.
 - **Kingmaker** needs 3+ players and a points game won by exactly 1 point or less (not a tie).
 - **Titles**: 28 fixed titles plus one champion title per won campaign. "Social" titles never count imported plays.
+
+## Product and UX
+- **Desktop log modal** uses an intercepting route in a root `@modal` slot (`app/@modal/(.)log`). The slot sat inside the `(app)` route group at first, but interception didn't fire there.
+- **Phones** get the full-page `/log`. The Guild tab redirects to your guild when you're in exactly one.
+- **Who you can add to a party:** friends, guild mates and anyone you've already played with, minus blocks. Anyone else joins as a guest and can claim later.
+- **Guests** belong to the player who logged them. A claim link (`/claim/[token]`) moves every participation of that guest, plus the logger's other unclaimed guests with the same name, to the claimer, makes them friends with the logger, and recomputes. A claimed quest that is still pending waits for the claimer's confirmation like any other party member.
+- **Disputes:** any registered party member except the logger can dispute while a quest is pending or within 48 hours of logging. The logger fixes it by editing (back to pending, new 48-hour window), or the disputer withdraws.
+- **Privacy:** Public (anyone, including signed-out visitors, plus OG images), Friends (default) or Private. Guild quests are visible to guild members, and party members always see quests they're in. Private players show as "A player" to strangers. Blocks hide content both ways and stop party adds, comments and reactions.
+- **Drafts** autosave to localStorage immediately and to the server (`QuestDraft`) after 1.5 s. The newest copy wins on reopen.
+- **Proposing games for a night:** from the host's collection (shelf items) or games the host has played, or from the proposer's own shelf.
+- **Game night "tonight" suggestions** appear in the log form when a night you're part of starts within 20 hours.
+- **Notifications** come from diffs between derived-state snapshots, deduplicated by key, so recompute never spams. A big import that unlocks more than 3 titles sends one summary. Email goes out for confirmations, disputes, crowns, tier-ups, titles, game nights and campaign finales when the player allows email.
+- **Account deletion** keeps shared quests for the other players, with the deleted player replaced by a "Former player" guest. Solo quests are removed.
+- **Rate limits** are fixed windows stored in Postgres (`RateLimit`), so they hold across serverless instances. They cover logging, comments, reactions, friend requests, reports, sign-in, imports, uploads and search.
+
+## Imports
+- Imported plays create quests with `source: import` and `status: confirmed`, owned by the importer. Friends named in the file appear as participants but the play counts only for the importer.
+- If no player in a play is marked as you, you're added to the party without a score.
+- Game matching: exact name or alternate name, then trigram similarity of 0.6 or more with a year within ±1. Otherwise a custom game is created with `needsConfirmation` and listed under "Games to check".
+- Processing runs in chunks of 15 plays with a recompute after each chunk, so the island visibly builds itself. A job lock plus resume (on poll or cron) handles serverless timeouts.
+
+## Catalog
+- 526 entries, written in parallel batches by category and merged with de-duplication by slug and normalized name. Unknown facts are `null`, so about half the weights are null. The raid rule then relies on play time for those games.
+- Categories and mechanics are restricted to a fixed vocabulary (`lib/catalog/vocab.ts`), so terrain tags can't land in the wrong field.
+- Wikidata enrichment can't run in this build environment (the host is blocked). The script is written and documented, and the app never depends on it.
+
+## Infrastructure
+- **Pushing was blocked** for the first few milestones (GitHub 403 until the app was installed). Those commits were pushed together once access was granted.
+- **E2E tests** create fresh players through the real magic-link flow, reading the console outbox through `/api/dev/mailbox` (only with `ENABLE_DEV_LOGIN`). They run against the seeded database without depending on seed details.
