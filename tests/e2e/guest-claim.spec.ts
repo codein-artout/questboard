@@ -25,7 +25,7 @@ test("a guest claims their account and their history backfills", async ({ browse
   await c.goto("/");
   await expect(c.getByRole("button", { name: /^Azul, waiting for confirmation/ })).toBeVisible();
   await c.goto(`/quests/${questId}`);
-  await expect(c.getByRole("link", { name: guestName })).toBeVisible();
+  await expect(c.locator("#main").getByRole("link", { name: guestName })).toBeVisible();
   // The quest is now waiting on the claimer's confirmation like any party member.
   await expect(c.getByRole("button", { name: "Confirm quest" })).toBeVisible();
 

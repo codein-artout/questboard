@@ -16,7 +16,8 @@ export async function signInWithEmail(_prev: SignInState, form: FormData): Promi
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Enter a valid email address" };
   const ip = (await headers()).get("x-forwarded-for")?.split(",")[0]?.trim() ?? "local";
   try {
-    await rateLimit("signIn", `ip:${ip}`);
+    // Per-IP limit (shared networks get some headroom); skipped for local dev and tests.
+    if (!devLoginEnabled()) await rateLimit("signInIp", ip);
     await rateLimit("signIn", `email:${parsed.data.email}`);
   } catch (e) {
     if (e instanceof RateLimitError) return { error: e.message };

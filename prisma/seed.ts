@@ -66,6 +66,7 @@ async function main() {
   const start = new Date(now.getTime() - 300 * DAY);
   console.log("[seed] clearing previous data");
   await db.$transaction([
+    db.rateLimit.deleteMany(),
     db.notification.deleteMany(),
     db.reaction.deleteMany(),
     db.comment.deleteMany(),
