@@ -11,6 +11,7 @@ import { CrownIcon } from "@/components/game/CrownIcon";
 import { PlayerDisc } from "@/components/game/PlayerDisc";
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import { theGame } from "@/lib/format";
 import type { RewardData } from "@/server/queries/reward";
 
 function Tile({ terrain, tier, width, halo, crown, ghost, building }: { terrain: keyof typeof TERRAIN_INFO; tier: number; width: number; halo?: boolean; crown?: boolean; ghost?: boolean; building?: React.ReactNode }) {
@@ -212,13 +213,13 @@ export function RewardView({ data, next, shareUrl }: { data: RewardData; next?: 
             <div className="rounded-[14px] bg-gold px-3.5 py-3 text-sea">
               <div className="text-[13px] font-semibold">Crown taken</div>
               <div className="mt-0.5 text-sm font-bold leading-tight">
-                You took the {data.game.name} crown{p.crownsTaken[0]!.fromName ? ` from ${p.crownsTaken[0]!.fromName}` : ""}
+                You took {theGame(data.game.name)} crown{p.crownsTaken[0]!.fromName ? ` from ${p.crownsTaken[0]!.fromName}` : ""}
               </div>
             </div>
           ) : !p.crownsTaken.length && p.crownsClaimed.length ? (
             <div className="rounded-[14px] bg-gold px-3.5 py-3 text-sea">
               <div className="text-[13px] font-semibold">New crown</div>
-              <div className="mt-0.5 text-sm font-bold leading-tight">You hold the {data.game.name} crown with {p.crownsClaimed[0]!.record}</div>
+              <div className="mt-0.5 text-sm font-bold leading-tight">You hold {theGame(data.game.name)} crown with {p.crownsClaimed[0]!.record}</div>
             </div>
           ) : null}
           {p.personalBest ? (

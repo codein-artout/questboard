@@ -92,3 +92,8 @@ export function tzOffsetMinutes(timeZone: string, at = new Date()): number {
 export function dayPhrase(d: Date, now = new Date(), tz = 0): string {
   return relativeDay(d, now, tz).replace(/^(Today|Yesterday|Last)\b/, (m) => m.toLowerCase());
 }
+
+/** "the Wingspan crown" but "The Crew crown" (no doubled article). */
+export function theGame(name: string): string {
+  return /^the\s/i.test(name) ? name : `the ${name}`;
+}

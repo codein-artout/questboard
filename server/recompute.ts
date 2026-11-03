@@ -1,3 +1,4 @@
+import { theGame } from "@/lib/format";
 import { Prisma, type PrismaClient } from "@prisma/client";
 import { computeWorld } from "@/game/engine";
 import { tierName, withArticle } from "@/game/tiers";
@@ -276,11 +277,11 @@ async function notifyChanges(before: Snapshot, output: EngineOutput, input: Engi
     const href = `/games/${slugs.get(c.gameId) ?? ""}`;
     const since = c.since.toISOString();
     jobs.push(
-      notify(c.holderUserId, "crown_taken", { title: `You took the ${game} ${where}${prev ? ` from ${name.get(prev) ?? "someone"}` : ""}`, body: `Record: ${c.recordLabel}.`, href }, `crown_taken:${k}:${since}`),
+      notify(c.holderUserId, "crown_taken", { title: `You took ${theGame(game)} ${where}${prev ? ` from ${name.get(prev) ?? "someone"}` : ""}`, body: `Record: ${c.recordLabel}.`, href }, `crown_taken:${k}:${since}`),
     );
     if (prev) {
       jobs.push(
-        notify(prev, "crown_lost", { title: `${name.get(c.holderUserId) ?? "Someone"} took your ${game} ${where}`, body: `New record: ${c.recordLabel}.`, href }, `crown_lost:${k}:${since}`),
+        notify(prev, "crown_lost", { title: `${name.get(c.holderUserId) ?? "Someone"} took your ${game.replace(/^The /, "")} ${where}`, body: `New record: ${c.recordLabel}.`, href }, `crown_lost:${k}:${since}`),
       );
     }
   }

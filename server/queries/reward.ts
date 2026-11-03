@@ -1,3 +1,4 @@
+import { theGame } from "@/lib/format";
 import type { Terrain } from "@/game/config";
 import { hexKey, neighbors } from "@/game/hex";
 import { tierName, withArticle } from "@/game/tiers";
@@ -88,7 +89,7 @@ export async function getReward(questId: string, viewerId: string): Promise<Rewa
     variant = "crown";
     label = "Quest complete";
     title = "Crown taken";
-    subtitle = `You took the ${tileName} crown${crownEv.fromName ? ` from ${crownEv.fromName}` : ""}`;
+    subtitle = `You took ${theGame(tileName)} crown${crownEv.fromName ? ` from ${crownEv.fromName}` : ""}`;
   }
   let fromColor: PlayerColorKey | null = null;
   if (crownEv?.fromUserId) {

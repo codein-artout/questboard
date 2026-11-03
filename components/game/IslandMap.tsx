@@ -19,6 +19,7 @@ export type MapTile = {
   monogram: string;
   crown?: boolean;
   pendingTierUp?: boolean;
+  holder?: { name: string; color: import("@/lib/colors").PlayerColorKey | null } | null;
   /** Accessible label, e.g. "Cascadia, Citadel, 52 plays". */
   label: string;
 };
@@ -304,6 +305,7 @@ export function IslandMap({
                 fullName={showFull}
                 crown={t.crown}
                 pendingTierUp={t.pendingTierUp}
+                holder={t.holder}
                 selected={t.key === selectedKey}
               />
             );

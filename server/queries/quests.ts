@@ -1,3 +1,4 @@
+import { theGame } from "@/lib/format";
 import { Prisma } from "@prisma/client";
 import type { Terrain } from "@/game/config";
 import { tierName, withArticle } from "@/game/tiers";
@@ -116,7 +117,7 @@ function chipsFor(q: QuestWithAll, viewerId: string | null, nameOf: (userId: str
     const who = you ? "" : `${nameOf(o.userId)}: `;
     if (o.p.newLand) chips.push({ tone: "plain", label: you ? `New land: ${gameName}` : `New land for ${nameOf(o.userId)}` });
     if (o.p.tierUp) chips.push({ tone: "plain", label: `${who}${gameName} rises to ${withArticle(tierName(o.p.tierUp.to))}` });
-    for (const c of o.p.crownsTaken) chips.push({ tone: "rare", label: you ? `Took the ${gameName} crown${c.fromName ? ` from ${c.fromName}` : ""}` : `${nameOf(o.userId)} took the crown` });
+    for (const c of o.p.crownsTaken) chips.push({ tone: "rare", label: you ? `Took ${theGame(gameName)} crown${c.fromName ? ` from ${c.fromName}` : ""}` : `${nameOf(o.userId)} took the crown` });
     for (const t of o.p.titles) chips.push({ tone: "title", label: you ? `Title: ${t.name}` : `${nameOf(o.userId)} earned ${t.name}` });
   }
   return chips.slice(0, 5);

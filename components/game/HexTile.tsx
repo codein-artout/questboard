@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 import type { Terrain } from "@/game/config";
 import { cn } from "@/lib/cn";
 import { CrownIcon } from "./CrownIcon";
+import { PlayerDisc } from "./PlayerDisc";
+import type { PlayerColorKey } from "@/lib/colors";
 import { BUILDING_SIZE_76 } from "./glyphs";
 import { SHELF_COLORS, terrainColors, UNEXPLORED_FACE, type TileKind } from "./terrain";
 import { TierBuilding } from "./TierBuilding";
@@ -20,6 +22,8 @@ export type HexTileVisual = {
   crown?: boolean;
   selected?: boolean;
   pendingTierUp?: boolean;
+  /** Guild island: the crown holder's disc under a small crown. */
+  holder?: { name: string; color: PlayerColorKey | null } | null;
 };
 
 export const tileHeight = (width: number) => Math.round((width * 88) / 76);
@@ -73,6 +77,12 @@ export function HexTile({ width, className, style, ...v }: HexTileVisual & { wid
         <div className="hex absolute" style={{ left: 5 * s, right: 5 * s, top: 4 * s, height: 78 * s, boxShadow: "inset 0 0 0 2px rgba(255,255,255,0.5)", background: "transparent" }} />
       ) : null}
       {v.crown ? <CrownIcon size={Math.round(18 * s)} className="absolute" style={{ right: 4 * s, top: 10 * s }} /> : null}
+      {v.holder ? (
+        <span className="absolute flex flex-col items-center" style={{ right: 0, top: 4 * s }}>
+          <CrownIcon size={Math.round(14 * s)} />
+          <PlayerDisc player={v.holder} size={Math.round(20 * s)} edge="#0F2E45" className="-mt-0.5" />
+        </span>
+      ) : null}
       {v.pendingTierUp ? (
         <svg className="absolute" style={{ left: 6 * s, top: 12 * s }} width={Math.round(16 * s)} height={Math.round(16 * s)} viewBox="0 0 24 24" aria-hidden>
           <circle cx="12" cy="12" r="11" fill="#0F2E45" />
