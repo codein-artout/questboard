@@ -1,6 +1,7 @@
 "use server";
 
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { AuthError as NextAuthError } from "next-auth";
 import { devLoginEnabled, signIn, signOut } from "@/lib/auth";
@@ -21,8 +22,8 @@ export async function signInWithEmail(_prev: SignInState, form: FormData): Promi
     if (e instanceof RateLimitError) return { error: e.message };
     throw e;
   }
-  await signIn("email", { email: parsed.data.email, redirectTo: parsed.data.next ?? "/" });
-  return null;
+  await signIn("email", { email: parsed.data.email, redirectTo: parsed.data.next ?? "/", redirect: false });
+  redirect("/signin/check");
 }
 
 export async function signInWithGoogle(form: FormData) {

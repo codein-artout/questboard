@@ -38,3 +38,14 @@ export async function removeFromShelfAction(gameId: string): Promise<ActionResul
     return null;
   });
 }
+
+/** An imported game that wasn't in the catalog: the player confirms it's right. */
+export async function confirmImportedGameAction(gameId: string): Promise<ActionResult<null>> {
+  return runAction(async () => {
+    const viewer = await requireActionUser();
+    const res = await db.game.updateMany({ where: { id: z.string().min(1).max(40).parse(gameId), createdById: viewer.id, source: "custom" }, data: { needsConfirmation: false } });
+    if (!res.count) throw new UserError("That game isn't yours to confirm.");
+    revalidatePath("/import");
+    return null;
+  });
+}

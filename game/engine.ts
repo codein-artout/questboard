@@ -8,7 +8,7 @@
  * deterministic: the same input always yields the same output.
  */
 import { CROWNS, GUILD, NEMESIS, TERRAINS, TITLE_RULES, XP, type ScoringType, type Terrain, type XpSource } from "./config";
-import { classAt, type PlayerClass } from "./class";
+import { classAt } from "./class";
 import { placeTiles } from "./layout";
 import { levelFromXp } from "./levels";
 import { placesFromScores } from "./places";
@@ -671,7 +671,6 @@ export function computeWorld(input: EngineInput): EngineOutput {
 
       const levelBefore = levelFromXp(s.xp);
       const levelAfter = levelFromXp(s.xp + total);
-      const classBefore: PlayerClass = classAt(s.terrainPlays, at);
 
       const payload: QuestOutcomePayload = {
         status: commit ? "confirmed" : "pending",

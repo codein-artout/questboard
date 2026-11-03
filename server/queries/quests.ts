@@ -80,7 +80,7 @@ export async function feedQuests(viewer: { id: string; guildIds: string[] } | nu
 }
 
 /** Names shown to the viewer: private players become "A player" unless the viewer shares the quest. */
-async function nameResolver(viewerId: string | null, quests: QuestWithAll[]) {
+async function nameResolver(viewerId: string | null) {
   const friends = viewerId ? new Set(await friendIds(viewerId)) : new Set<string>();
   const blocked = viewerId ? await blockedIds(viewerId) : new Set<string>();
   return (q: QuestWithAll, p: QuestWithAll["participants"][number]) => {
@@ -124,7 +124,7 @@ function chipsFor(q: QuestWithAll, viewerId: string | null, nameOf: (userId: str
 }
 
 export async function toCards(quests: QuestWithAll[], viewerId: string | null, tz = 0): Promise<CardWithSocial[]> {
-  const resolve = await nameResolver(viewerId, quests);
+  const resolve = await nameResolver(viewerId);
   const now = new Date();
   return quests.map((q) => {
     const names = new Map(q.participants.map((p) => [p.userId ?? p.id, resolve(q, p)]));

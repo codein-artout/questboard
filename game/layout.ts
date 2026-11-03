@@ -85,7 +85,7 @@ export function islandSurroundings(tiles: readonly Axial[], shelfIds: readonly s
   for (const t of tiles) maxRing = Math.max(maxRing, ringOf(t));
   const out: IslandSlot[] = [];
   let ringN = maxRing + 1;
-  let remaining = [...shelfIds];
+  const remaining = [...shelfIds];
   let displayRadius = maxRing + 1;
   while (remaining.length > 0) {
     const free = ring(ringN)
