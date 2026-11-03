@@ -19,7 +19,7 @@ export const questInclude = {
   loggedBy: { select: { id: true, privacy: true, displayName: true, handle: true } },
   participants: {
     orderBy: { seat: "asc" as const },
-    include: { user: { select: { id: true, displayName: true, handle: true, color: true, privacy: true } }, guest: { select: { name: true } } },
+    include: { user: { select: { id: true, displayName: true, handle: true, color: true, privacy: true } }, guest: { select: { name: true, claimToken: true, ownerId: true, claimedById: true } } },
   },
   outcomes: { select: { userId: true, xp: true, status: true, payload: true } },
   reactions: { select: { kind: true, userId: true } },

@@ -10,7 +10,7 @@ import { shellViewer } from "@/server/shell";
  * The app shell: nav rail on desktop, tab bar on phones. Signed-out visitors
  * (on public islands, tiles and quests) get a slim header instead.
  */
-export default async function AppLayout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const viewer = await getViewer();
   if (!viewer?.onboardedAt || !viewer.handle) {
     return (
@@ -34,7 +34,6 @@ export default async function AppLayout({ children, modal }: { children: React.R
       <div className="min-w-0 flex-1 pb-[96px] desk:pb-0">{children}</div>
       <TabBar />
       <LogShortcut />
-      {modal}
     </div>
   );
 }

@@ -551,7 +551,7 @@ export function computeWorld(input: EngineInput): EngineOutput {
     for (const p of counted) stateOf(p.userId, p.name);
 
     const won = (p: { place: number | null }) => (quest.coop ? quest.coopWin === true : p.place === 1);
-    const tiedFirst = (p: { place: number | null }) => p.place !== null && registered.filter((o) => o.place === p.place).length > 1;
+    const tiedFirst = (p: { place: number | null }) => p.place !== null && quest.participants.filter((o) => o.place === p.place).length > 1;
 
     // Teaching (live quests only).
     const priorPlays = (u: string) => states.get(u)?.games.get(tileGame)?.plays ?? 0;

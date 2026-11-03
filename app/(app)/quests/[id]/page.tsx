@@ -156,6 +156,11 @@ export default async function QuestDetail({ params }: Props) {
                       <PlayerDisc player={{ name, color: p.user?.color ?? null }} size={26} ring={!q.coop && p.place === 1} edge="#17405E" />
                       {p.user?.handle && name !== "A player" ? <Link href={`/u/${p.user.handle}`} className="font-semibold text-text no-underline hover:text-gold-hover">{name}</Link> : <span className="font-semibold">{name}</span>}
                       {!p.userId ? <span className="text-xs text-muted">guest</span> : null}
+                      {!p.userId && p.guest && p.guest.ownerId === viewer?.id && !p.guest.claimedById ? (
+                        <Link href={`/claim/${p.guest.claimToken}`} className="text-xs font-bold" title={`Send this link to ${p.guest.name} so they can claim their quests`}>
+                          Claim link
+                        </Link>
+                      ) : null}
                       {p.team ? <span className="text-xs text-muted">{p.team}</span> : null}
                     </span>
                   </td>

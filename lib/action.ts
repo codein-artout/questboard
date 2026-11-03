@@ -1,23 +1,12 @@
 import { ZodError } from "zod";
 import { Prisma } from "@prisma/client";
 import { RateLimitError } from "@/lib/rate-limit";
-import { AuthError } from "@/lib/session";
+import { AuthError, NotFoundError, UserError } from "@/lib/errors";
+
+export { AuthError, NotFoundError, UserError };
 
 export type ActionResult<T> = { ok: true; data: T } | { ok: false; error: string; fieldErrors?: Record<string, string[]> };
 
-export class NotFoundError extends Error {
-  constructor(message = "Not found.") {
-    super(message);
-    this.name = "NotFoundError";
-  }
-}
-
-export class UserError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "UserError";
-  }
-}
 
 /** Runs an action body and turns known errors into friendly results. */
 export async function runAction<T>(fn: () => Promise<T>): Promise<ActionResult<T>> {

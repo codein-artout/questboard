@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import type { User } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { AuthError } from "@/lib/errors";
+
+export { AuthError };
 
 export type SessionUser = User & { isAdmin: boolean; guildIds: string[] };
 
@@ -40,11 +43,5 @@ export async function requireActionUser(): Promise<SessionUser> {
   return viewer;
 }
 
-export class AuthError extends Error {
-  constructor(message = "You can't do that.") {
-    super(message);
-    this.name = "AuthError";
-  }
-}
 
 export const toViewer = (u: SessionUser | null) => (u ? { id: u.id, role: u.isAdmin ? ("ADMIN" as const) : ("USER" as const), guildIds: u.guildIds } : null);

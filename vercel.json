@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "buildCommand": "pnpm prisma migrate deploy && pnpm tsx scripts/catalog-sync.ts && pnpm build",
+  "crons": [
+    { "path": "/api/cron/auto-confirm", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/imports", "schedule": "*/5 * * * *" }
+  ]
+}
