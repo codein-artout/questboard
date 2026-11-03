@@ -1,1 +1,15 @@
 questboard-design.zip
+node_modules/
+.next/
+out/
+coverage/
+.data/
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+test-results/
+playwright-report/
+blob-report/
+screenshots/tmp/
+.vercel

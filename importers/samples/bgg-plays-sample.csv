@@ -1,0 +1,27 @@
+playid,objectid,objectname,yearpublished,date,quantity,length,incomplete,nowinstats,location,comments,username,player1username,player1userid,player1name,player1startposition,player1color,player1score,player1new,player1rating,player1win,player2username,player2userid,player2name,player2startposition,player2color,player2score,player2new,player2rating,player2win,player3username,player3userid,player3name,player3startposition,player3color,player3score,player3new,player3rating,player3win,player4username,player4userid,player4name,player4startposition,player4color,player4score,player4new,player4rating,player4win
+71230001,295947,Cascadia,2021,2023-07-02,1,45,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,,92,0,0,1,priya_p,2210377,Priya,2,,88,0,0,0,,0,Ravi,3,,79,0,0,0,,,,,,,,,
+71230002,266192,Wingspan,2019,2023-07-06,1,75,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,,84,0,0,0,priya_p,2210377,Priya,2,,90,0,0,1,,,,,,,,,,,,,,,,,,
+71230003,2655,Hive,2001,2023-07-08,2,20,0,0,Home,"Best of two, Priya took both.",ciaoplays,ciaoplays,1844021,Ciao,1,Black,,0,0,0,priya_p,2210377,Priya,2,White,,0,0,1,,,,,,,,,,,,,,,,,,
+71230004,230802,Azul,2017,2023-07-12,1,30,0,0,Meeple & Mug Café,,ciaoplays,ciaoplays,1844021,Ciao,1,,66,0,0,1,priya_p,2210377,Priya,2,,54,0,0,0,,0,Ravi,3,,61,0,0,0,,0,Maya,4,,40,1,0,0
+71230005,167791,Terraforming Mars,2016,2023-07-15,1,150,0,0,Home,"Long one, but worth it.
+Venus track maxed by gen 9, oceans done by gen 11.",ciaoplays,ciaoplays,1844021,Ciao,1,Red,78,0,0,0,priya_p,2210377,Priya,2,Green,83,0,0,1,,0,Ravi,3,Blue,71,1,0,0,,,,,,,,,
+71230006,30549,Pandemic,2008,2023-07-19,1,50,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,Medic,,0,0,1,priya_p,2210377,Priya,2,Scientist,,0,0,1,,0,Ravi,3,Researcher,,0,0,1,,,,,,,,,
+71230007,178900,Codenames,2015,2023-07-22,1,25,0,0,Meeple & Mug Café,,ciaoplays,ciaoplays,1844021,Ciao,1,Red,,0,0,1,,0,Maya,2,Red,,0,0,1,priya_p,2210377,Priya,3,Blue,,0,0,0,,0,Ravi,4,Blue,,0,0,0
+71230008,13,Catan,1995,2023-07-29,1,0,1,0,Home,"Called it at 2am, Ravi was on 8 points.",ciaoplays,ciaoplays,1844021,Ciao,1,Orange,6,0,0,0,priya_p,2210377,Priya,2,White,7,0,0,0,,0,Ravi,3,Blue,8,0,0,0,,,,,,,,,
+71230009,284083,The Crew: The Quest for Planet Nine,2019,2023-08-02,3,40,0,0,Home,"Missions 12-14, all cleared.",ciaoplays,ciaoplays,1844021,Ciao,1,,,0,0,1,priya_p,2210377,Priya,2,,,0,0,1,,0,Ravi,3,,,1,0,1,,,,,,,,,
+71230010,295947,Cascadia,2021,2023-08-05,1,40,0,0,Home,,ciaoplays,priya_p,2210377,Priya,1,,95,0,0,1,ciaoplays,1844021,Ciao,2,,91,0,0,0,,,,,,,,,,,,,,,,,,
+71230011,,Grandma's Kitchen Card Game,,2023-08-09,1,15,0,0,Grandma's house,"Grandma said ""house rules apply"", and she makes the house rules.",ciaoplays,ciaoplays,1844021,Ciao,1,,12,1,0,0,,0,Maya,2,,19,1,0,1,,,,,,,,,,,,,,,,,,
+71230012,266192,Wingspan,2019,2023-08-12,1,90,0,0,Meeple & Mug Café,,ciaoplays,ciaoplays,1844021,Ciao,1,,101,0,0,1,priya_p,2210377,Priya,2,,94,0,0,0,,0,Ravi,3,,77,0,0,0,,,,,,,,,
+71230013,230802,Azul,2017,2023-08-16,1,28,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,,72,0,0,0,,0,Ravi,2,,75,0,0,1,,,,,,,,,,,,,,,,,,
+71230014,2655,Hive,2001,2023-08-19,1,15,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,White,,0,0,1,,0,Ravi,2,Black,,0,0,0,,,,,,,,,,,,,,,,,,
+71230015,30549,Pandemic,2008,2023-08-23,1,55,0,0,Home,"Lost to outbreaks, again.",ciaoplays,ciaoplays,1844021,Ciao,1,Dispatcher,,0,0,0,priya_p,2210377,Priya,2,Medic,,0,0,0,,,,,,,,,,,,,,,,,,
+71230016,167791,Terraforming Mars,2016,2023-08-26,1,135,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,Red,91,0,0,1,priya_p,2210377,Priya,2,Green,87,0,0,0,,,,,,,,,,,,,,,,,,
+71230017,13,Catan,1995,2023-09-02,1,85,0,0,Meeple & Mug Café,,ciaoplays,ciaoplays,1844021,Ciao,1,Orange,10,0,0,1,priya_p,2210377,Priya,2,White,8,0,0,0,,0,Ravi,3,Blue,7,0,0,0,,0,Maya,4,Red,5,1,0,0
+71230018,284083,The Crew: The Quest for Planet Nine,2019,2023-09-06,1,20,0,0,Home,Mission 15 failed on the last trick.,ciaoplays,ciaoplays,1844021,Ciao,1,,,0,0,0,priya_p,2210377,Priya,2,,,0,0,0,,0,Ravi,3,,,0,0,0,,,,,,,,,
+71230019,295947,Cascadia,2021,2023-09-09,1,42,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,,97,0,0,1,,0,Ravi,2,,86,0,0,0,,,,,,,,,,,,,,,,,,
+71230020,178900,Codenames,2015,2023-09-13,2,30,0,0,Meeple & Mug Café,,ciaoplays,ciaoplays,1844021,Ciao,1,Blue,,0,0,0,,0,Ravi,2,Blue,,0,0,0,priya_p,2210377,Priya,3,Red,,0,0,1,,0,Maya,4,Red,,0,0,1
+71230021,266192,Wingspan,2019,2023-09-16,1,0,0,0,,,ciaoplays,ciaoplays,1844021,Ciao,1,,88,0,0,1,priya_p,2210377,Priya,2,,85,0,0,0,,,,,,,,,,,,,,,,,,
+71230022,230802,Azul,2017,2023-09-23,1,32,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,,59,0,0,0,priya_p,2210377,Priya,2,,63,0,0,1,,0,Ravi,3,,50,0,0,0,,,,,,,,,
+71230023,,Grandma's Kitchen Card Game,,2023-09-30,1,10,0,0,Grandma's house,,ciaoplays,ciaoplays,1844021,Ciao,1,,21,0,0,1,,0,Maya,2,,16,0,0,0,,,,,,,,,,,,,,,,,,
+71230024,167791,Terraforming Mars,2016,2023-10-07,1,160,1,0,Home,"Stopped after gen 8, will finish another day.",ciaoplays,ciaoplays,1844021,Ciao,1,Red,52,0,0,0,priya_p,2210377,Priya,2,Green,49,0,0,0,,0,Ravi,3,Blue,47,0,0,0,,,,,,,,,
+71230025,30549,Pandemic,2008,2023-10-14,1,45,0,0,Home,,ciaoplays,ciaoplays,1844021,Ciao,1,Scientist,,0,0,1,priya_p,2210377,Priya,2,Medic,,0,0,1,,0,Ravi,3,Quarantine Specialist,,0,0,1,,0,Maya,4,Operations Expert,,1,0,1

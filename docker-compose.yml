@@ -1,0 +1,15 @@
+# Optional: a PostgreSQL server for local development if you don't have
+# PostgreSQL installed. `docker compose up -d db`, then `pnpm db:setup`.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: questboard
+      POSTGRES_PASSWORD: questboard
+      POSTGRES_DB: questboard
+    ports:
+      - "54329:5432"
+    volumes:
+      - questboard-pg:/var/lib/postgresql/data
+volumes:
+  questboard-pg:

@@ -1,0 +1,942 @@
+// Questboard data model.
+//
+// Two kinds of tables live here:
+//  * Source tables hold what people actually did or said (users, quests,
+//    participants, confirmations, shelf items, guilds, game nights...).
+//  * Derived tables (marked "derived") are rebuilt by the rules engine in
+//    /game from the source tables. Never edit their counters by hand; run
+//    `pnpm game:recompute` instead. User-set fields on derived rows (a tile's
+//    position, monogram and terrain override) are preserved by recompute.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [pg_trgm]
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Privacy {
+  PUBLIC
+  FRIENDS
+  PRIVATE
+}
+
+enum PlayerColor {
+  red
+  blue
+  yellow
+  green
+  purple
+  orange
+  black
+  white
+}
+
+enum Terrain {
+  forest
+  peaks
+  meadow
+  marsh
+  reef
+  tundra
+}
+
+enum ScoringType {
+  points
+  win_lose
+  coop
+  ranked
+  teams
+}
+
+enum GameSource {
+  catalog
+  custom
+}
+
+enum QuestStatus {
+  pending
+  confirmed
+  disputed
+}
+
+enum QuestSource {
+  live
+  import
+}
+
+enum ConfirmationKind {
+  confirm
+  dispute
+}
+
+enum FriendStatus {
+  pending
+  accepted
+}
+
+enum ShelfSource {
+  manual
+  onboarding
+  import
+  logged
+}
+
+enum RsvpStatus {
+  going
+  maybe
+  cant
+}
+
+enum GuildRole {
+  owner
+  admin
+  member
+}
+
+enum GameNightStatus {
+  scheduled
+  cancelled
+}
+
+enum ReportStatus {
+  open
+  resolved
+  dismissed
+}
+
+enum ReportTarget {
+  user
+  quest
+  comment
+  game
+}
+
+enum ImportStatus {
+  queued
+  running
+  done
+  failed
+}
+
+enum LedgerStatus {
+  confirmed
+  pending
+}
+
+// ---------------------------------------------------------------------------
+// Accounts (Auth.js) and people
+// ---------------------------------------------------------------------------
+
+model User {
+  id                 String       @id @default(cuid())
+  email              String?      @unique
+  emailVerified      DateTime?
+  name               String?
+  image              String?
+  /// Lower-case unique handle used in URLs (/u/[handle]). Null until onboarding.
+  handle             String?      @unique
+  /// How the name is shown. Defaults to the handle.
+  displayName        String?
+  color              PlayerColor  @default(blue)
+  privacy            Privacy      @default(FRIENDS)
+  role               Role         @default(USER)
+  /// TitleAward.titleId the player chose to show next to their name.
+  displayedTitleId   String?
+  timezone           String       @default("UTC")
+  emailNotifications Boolean      @default(true)
+  /// Personal invite code: /invite/[code] auto-friends whoever signs up with it.
+  inviteCode         String       @unique @default(cuid())
+  onboardedAt        DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  accounts           Account[]
+  sessions           Session[]
+  friendshipsSent    Friendship[] @relation("FriendshipRequester")
+  friendshipsGot     Friendship[] @relation("FriendshipAddressee")
+  blocks             Block[]      @relation("Blocker")
+  blockedBy          Block[]      @relation("Blocked")
+  guestsOwned        Guest[]      @relation("GuestOwner")
+  guestsClaimed      Guest[]      @relation("GuestClaimer")
+  questsLogged       Quest[]      @relation("QuestLogger")
+  questsHosted       Quest[]      @relation("QuestHost")
+  participations     QuestParticipant[]
+  confirmations      Confirmation[]
+  tiles              Tile[]
+  ledger             XpLedger[]
+  outcomes           QuestOutcome[]
+  crownsHeld         Crown[]      @relation("CrownHolder")
+  crownsOwned        Crown[]      @relation("CrownOwner")
+  houseRecordsHosted HouseRecord[] @relation("HouseRecordHost")
+  houseRecordsHeld   HouseRecord[] @relation("HouseRecordHolder")
+  taught             TaughtBy[]   @relation("Teacher")
+  learned            TaughtBy[]   @relation("Learner")
+  shelf              ShelfItem[]
+  gameNightsHosted   GameNight[]
+  rsvps              Rsvp[]
+  proposals          NightProposal[]
+  votes              Vote[]
+  guildsFounded      Guild[]
+  memberships        GuildMember[]
+  campaignStandings  CampaignStanding[]
+  campaignsCreated   Campaign[]   @relation("CampaignCreator")
+  campaignsWon       Campaign[]   @relation("CampaignChampion")
+  titles             TitleAward[]
+  stats              PlayerStats?
+  nemesisOf          PlayerStats[] @relation("Nemesis")
+  reactions          Reaction[]
+  comments           Comment[]
+  notifications      Notification[]
+  reports            Report[]     @relation("Reporter")
+  reportsResolved    Report[]     @relation("ReportResolver")
+  importJobs         ImportJob[]
+  customGames        Game[]
+  draft              QuestDraft?
+  crownChangesFrom   CrownChange[] @relation("CrownChangeFrom")
+  crownChangesTo     CrownChange[] @relation("CrownChangeTo")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Friendship {
+  id          String       @id @default(cuid())
+  requesterId String
+  addresseeId String
+  status      FriendStatus @default(pending)
+  createdAt   DateTime     @default(now())
+  acceptedAt  DateTime?
+  requester   User         @relation("FriendshipRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  addressee   User         @relation("FriendshipAddressee", fields: [addresseeId], references: [id], onDelete: Cascade)
+
+  @@unique([requesterId, addresseeId])
+  @@index([addresseeId, status])
+  @@index([requesterId, status])
+}
+
+model Block {
+  blockerId String
+  blockedId String
+  createdAt DateTime @default(now())
+  blocker   User     @relation("Blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked   User     @relation("Blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@id([blockerId, blockedId])
+  @@index([blockedId])
+}
+
+/// A person without an account who played in someone's quest. Claiming a
+/// guest attaches all of their participations to the claiming user.
+model Guest {
+  id          String    @id @default(cuid())
+  ownerId     String?
+  name        String
+  claimToken  String    @unique @default(cuid())
+  claimedById String?
+  claimedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  owner       User?     @relation("GuestOwner", fields: [ownerId], references: [id], onDelete: SetNull)
+  claimedBy   User?     @relation("GuestClaimer", fields: [claimedById], references: [id], onDelete: SetNull)
+  participations QuestParticipant[]
+
+  @@index([ownerId])
+  @@index([claimedById])
+}
+
+// ---------------------------------------------------------------------------
+// Games
+// ---------------------------------------------------------------------------
+
+model Game {
+  id                String       @id @default(cuid())
+  slug              String       @unique
+  name              String
+  altNames          String[]     @default([])
+  /// Optional short monogram from the catalog ("TI4", "BotC").
+  short             String?
+  year              Int?
+  minPlayers        Int?
+  maxPlayers        Int?
+  minTime           Int?
+  maxTime           Int?
+  weight            Float?
+  categories        String[]     @default([])
+  mechanics         String[]     @default([])
+  scoring           ScoringType  @default(points)
+  /// Terrain derived from tags (GAME.md). Recomputed on catalog sync.
+  terrain           Terrain
+  /// Admin override for everyone.
+  terrainOverride   Terrain?
+  baseGameId        String?
+  source            GameSource   @default(catalog)
+  createdById       String?
+  /// Custom games auto-created by an import wait for the player to confirm them.
+  needsConfirmation Boolean      @default(false)
+  /// Lower-cased name plus alternate names, indexed with pg_trgm for fuzzy search.
+  searchText        String       @default("")
+  wikidataId        String?
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  baseGame          Game?        @relation("Expansions", fields: [baseGameId], references: [id], onDelete: SetNull)
+  expansions        Game[]       @relation("Expansions")
+  createdBy         User?        @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  quests            Quest[]
+  tiles             Tile[]
+  crowns            Crown[]
+  crownChanges      CrownChange[]
+  houseRecords      HouseRecord[]
+  taughtBy          TaughtBy[]
+  shelfItems        ShelfItem[]
+  proposals         NightProposal[]
+  guildTiles        GuildTile[]
+
+  @@index([baseGameId])
+  @@index([createdById])
+  @@index([source])
+  @@index([searchText(ops: raw("gin_trgm_ops"))], type: Gin, map: "Game_searchText_trgm_idx")
+}
+
+// ---------------------------------------------------------------------------
+// Quests (logged plays)
+// ---------------------------------------------------------------------------
+
+model Quest {
+  id            String       @id @default(cuid())
+  gameId        String
+  loggedById    String?
+  guildId       String?
+  gameNightId   String?
+  /// Registered player whose place this was (for hosting XP and house records).
+  hostUserId    String?
+  location      String?
+  playedAt      DateTime
+  /// Calendar day in the logger's local time (YYYY-MM-DD), for daily caps.
+  localDate     String
+  /// Minutes east of UTC at logging time, for "ended after midnight".
+  tzOffsetMin   Int          @default(0)
+  durationMin   Int?
+  coop          Boolean      @default(false)
+  coopWin       Boolean?
+  difficulty    Int?
+  teams         Boolean      @default(false)
+  notes         String?
+  photoKey      String?
+  status        QuestStatus  @default(pending)
+  source        QuestSource  @default(live)
+  importJobId   String?
+  /// Idempotency key for imports (source play id or a content hash).
+  sourceKey     String?
+  /// Imported plays can count as several plays (BGG quantity).
+  quantity      Int          @default(1)
+  autoConfirmAt DateTime?
+  confirmedAt   DateTime?
+  disputedAt    DateTime?
+  editedAt      DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  game          Game         @relation(fields: [gameId], references: [id], onDelete: Restrict)
+  loggedBy      User?        @relation("QuestLogger", fields: [loggedById], references: [id], onDelete: SetNull)
+  host          User?        @relation("QuestHost", fields: [hostUserId], references: [id], onDelete: SetNull)
+  guild         Guild?       @relation(fields: [guildId], references: [id], onDelete: SetNull)
+  gameNight     GameNight?   @relation(fields: [gameNightId], references: [id], onDelete: SetNull)
+  importJob     ImportJob?   @relation(fields: [importJobId], references: [id], onDelete: SetNull)
+  participants  QuestParticipant[]
+  confirmations Confirmation[]
+  ledger        XpLedger[]
+  outcomes      QuestOutcome[]
+  reactions     Reaction[]
+  comments      Comment[]
+  taughtBy      TaughtBy[]
+  houseRecords  HouseRecord[]
+  crownChanges  CrownChange[]
+
+  @@unique([loggedById, sourceKey])
+  @@index([gameId, playedAt])
+  @@index([loggedById, playedAt])
+  @@index([guildId, playedAt])
+  @@index([gameNightId])
+  @@index([hostUserId])
+  @@index([importJobId])
+  @@index([status, autoConfirmAt])
+  @@index([playedAt, id])
+}
+
+model QuestParticipant {
+  id       String  @id @default(cuid())
+  questId  String
+  userId   String?
+  guestId  String?
+  team     String?
+  score    Float?
+  /// Score at the midpoint, when entered, for the comeback house record.
+  midScore Float?
+  /// Final place (1 = first). Ties share a place.
+  place    Int?
+  seat     Int     @default(0)
+  quest    Quest   @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user     User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+  guest    Guest?  @relation(fields: [guestId], references: [id], onDelete: SetNull)
+
+  @@unique([questId, userId])
+  @@index([userId, questId])
+  @@index([guestId])
+}
+
+/// A registered party member's confirmation of, or dispute against, a quest.
+model Confirmation {
+  id         String           @id @default(cuid())
+  questId    String
+  userId     String
+  kind       ConfirmationKind
+  reason     String?
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+  quest      Quest            @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questId, userId])
+  @@index([userId])
+}
+
+/// Autosaved, unsent quest draft (one per user).
+model QuestDraft {
+  userId    String   @id
+  data      Json
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ---------------------------------------------------------------------------
+// Derived game state
+// ---------------------------------------------------------------------------
+
+/// derived (except q/r once placed, monogramOverride, terrainOverride)
+model Tile {
+  id               String    @id @default(cuid())
+  userId           String
+  gameId           String
+  q                Int
+  r                Int
+  plays            Int       @default(0)
+  /// Plays from quests still waiting for confirmation (ghost tiles / tier-ups).
+  pendingPlays     Int       @default(0)
+  /// 0 = ghost (only pending plays), 1 Outpost ... 6 Wonder.
+  tier             Int       @default(0)
+  firstPlayedAt    DateTime?
+  lastPlayedAt     DateTime?
+  bestScore        Float?
+  wins             Int       @default(0)
+  monogramOverride String?
+  terrainOverride  Terrain?
+  updatedAt        DateTime  @updatedAt
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game             Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+  @@unique([userId, q, r])
+  @@index([gameId])
+}
+
+/// derived
+model XpLedger {
+  id         String       @id @default(cuid())
+  userId     String
+  questId    String?
+  source     String
+  amount     Int
+  status     LedgerStatus @default(confirmed)
+  guildId    String?
+  campaignId String?
+  at         DateTime
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quest      Quest?       @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status, at])
+  @@index([questId])
+  @@index([guildId])
+  @@index([campaignId])
+}
+
+/// derived: everything a quest did for one player (XP lines, new land,
+/// tier-up, crowns, personal best, level-up, class change, titles).
+model QuestOutcome {
+  id      String       @id @default(cuid())
+  questId String
+  userId  String
+  status  LedgerStatus
+  xp      Int
+  payload Json
+  quest   Quest        @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questId, userId])
+  @@index([userId])
+}
+
+/// derived. scopeKey is "guild:<guildId>" or "friends:<ownerUserId>".
+model Crown {
+  id           String   @id @default(cuid())
+  scopeKey     String
+  gameId       String
+  guildId      String?
+  ownerUserId  String?
+  holderUserId String?
+  /// Co-op crowns are held by a group of players (user ids).
+  holderGroup  String[] @default([])
+  heldByGuild  Boolean  @default(false)
+  /// Comparable record value: score, win rate, or co-op wins at top difficulty.
+  recordValue  Float
+  /// Human-readable record ("104", "61% wins", "3 wins at level 5").
+  recordLabel  String
+  since        DateTime
+  questId      String?
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  guild        Guild?   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  owner        User?    @relation("CrownOwner", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  holder       User?    @relation("CrownHolder", fields: [holderUserId], references: [id], onDelete: Cascade)
+
+  @@unique([scopeKey, gameId])
+  @@index([gameId])
+  @@index([guildId])
+  @@index([ownerUserId])
+  @@index([holderUserId])
+}
+
+/// derived: crowns changing hands, for feeds and notifications.
+model CrownChange {
+  id         String   @id @default(cuid())
+  scopeKey   String
+  gameId     String
+  guildId    String?
+  fromUserId String?
+  toUserId   String?
+  questId    String
+  at         DateTime
+  game       Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  guild      Guild?   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  fromUser   User?    @relation("CrownChangeFrom", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser     User?    @relation("CrownChangeTo", fields: [toUserId], references: [id], onDelete: Cascade)
+  quest      Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@index([guildId, at])
+  @@index([gameId])
+  @@index([questId])
+  @@index([fromUserId])
+  @@index([toUserId])
+}
+
+/// derived: records at a host's place.
+model HouseRecord {
+  id          String   @id @default(cuid())
+  hostUserId  String
+  gameId      String
+  kind        String
+  value       Float
+  holderUserId String?
+  holderName  String
+  questId     String
+  achievedAt  DateTime
+  detail      String?
+  host        User     @relation("HouseRecordHost", fields: [hostUserId], references: [id], onDelete: Cascade)
+  holder      User?    @relation("HouseRecordHolder", fields: [holderUserId], references: [id], onDelete: SetNull)
+  game        Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  quest       Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@unique([hostUserId, gameId, kind])
+  @@index([gameId])
+  @@index([questId])
+  @@index([holderUserId])
+}
+
+/// derived: who taught whom each game.
+model TaughtBy {
+  id        String   @id @default(cuid())
+  gameId    String
+  teacherId String
+  learnerId String
+  questId   String
+  at        DateTime
+  game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  teacher   User     @relation("Teacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  learner   User     @relation("Learner", fields: [learnerId], references: [id], onDelete: Cascade)
+  quest     Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, learnerId])
+  @@index([teacherId, gameId])
+  @@index([learnerId])
+  @@index([questId])
+}
+
+/// derived
+model TitleAward {
+  id       String   @id @default(cuid())
+  userId   String
+  titleId  String
+  name     String
+  earnedAt DateTime
+  questId  String?
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, titleId])
+  @@index([titleId])
+}
+
+/// derived: headline numbers for the character sheet and island header.
+model PlayerStats {
+  userId          String   @id
+  xp              Int      @default(0)
+  pendingXp       Int      @default(0)
+  level           Int      @default(1)
+  xpIntoLevel     Int      @default(0)
+  xpForNext       Int      @default(500)
+  classKey        String   @default("none")
+  className       String   @default("The Wanderer")
+  hIndex          Int      @default(0)
+  gamesExplored   Int      @default(0)
+  totalPlays      Int      @default(0)
+  wins            Int      @default(0)
+  raids           Int      @default(0)
+  wonders         Int      @default(0)
+  citadels        Int      @default(0)
+  crownsHeld      Int      @default(0)
+  peopleTaught    Int      @default(0)
+  nemesisId       String?
+  nemesisWins     Int      @default(0)
+  nemesisLosses   Int      @default(0)
+  nemesisMeetings Int      @default(0)
+  terrainPlays    Json     @default("{}")
+  titleProgress   Json     @default("[]")
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nemesis         User?    @relation("Nemesis", fields: [nemesisId], references: [id], onDelete: SetNull)
+
+  @@index([nemesisId])
+}
+
+// ---------------------------------------------------------------------------
+// Shelf and game nights
+// ---------------------------------------------------------------------------
+
+model ShelfItem {
+  id         String      @id @default(cuid())
+  userId     String
+  gameId     String
+  acquiredAt DateTime    @default(now())
+  source     ShelfSource @default(manual)
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game       Game        @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, gameId])
+  @@index([gameId])
+}
+
+model GameNight {
+  id         String          @id @default(cuid())
+  hostId     String
+  guildId    String?
+  campaignId String?
+  isFinale   Boolean         @default(false)
+  title      String?
+  startsAt   DateTime
+  location   String
+  notes      String?
+  status     GameNightStatus @default(scheduled)
+  createdAt  DateTime        @default(now())
+  host       User            @relation(fields: [hostId], references: [id], onDelete: Cascade)
+  guild      Guild?          @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  campaign   Campaign?       @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  rsvps      Rsvp[]
+  proposals  NightProposal[]
+  votes      Vote[]
+  quests     Quest[]
+
+  @@index([guildId, startsAt])
+  @@index([hostId, startsAt])
+  @@index([campaignId])
+}
+
+model Rsvp {
+  id          String     @id @default(cuid())
+  gameNightId String
+  userId      String
+  status      RsvpStatus
+  updatedAt   DateTime   @updatedAt
+  gameNight   GameNight  @relation(fields: [gameNightId], references: [id], onDelete: Cascade)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([gameNightId, userId])
+  @@index([userId])
+}
+
+model NightProposal {
+  id           String    @id @default(cuid())
+  gameNightId  String
+  gameId       String
+  proposedById String
+  createdAt    DateTime  @default(now())
+  gameNight    GameNight @relation(fields: [gameNightId], references: [id], onDelete: Cascade)
+  game         Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  proposedBy   User      @relation(fields: [proposedById], references: [id], onDelete: Cascade)
+  votes        Vote[]
+
+  @@unique([gameNightId, gameId])
+  @@index([gameId])
+  @@index([proposedById])
+}
+
+model Vote {
+  id          String        @id @default(cuid())
+  gameNightId String
+  proposalId  String
+  userId      String
+  createdAt   DateTime      @default(now())
+  gameNight   GameNight     @relation(fields: [gameNightId], references: [id], onDelete: Cascade)
+  proposal    NightProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([proposalId, userId])
+  @@index([gameNightId, userId])
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Guilds and campaigns
+// ---------------------------------------------------------------------------
+
+model Guild {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  description  String?
+  founderId    String?
+  inviteCode   String        @unique @default(cuid())
+  createdAt    DateTime      @default(now())
+  founder      User?         @relation(fields: [founderId], references: [id], onDelete: SetNull)
+  members      GuildMember[]
+  tiles        GuildTile[]
+  quests       Quest[]
+  crowns       Crown[]
+  crownChanges CrownChange[]
+  gameNights   GameNight[]
+  campaigns    Campaign[]
+
+  @@index([founderId])
+}
+
+model GuildMember {
+  id       String    @id @default(cuid())
+  guildId  String
+  userId   String
+  role     GuildRole @default(member)
+  joinedAt DateTime  @default(now())
+  guild    Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, userId])
+  @@index([userId])
+}
+
+/// derived
+model GuildTile {
+  id      String @id @default(cuid())
+  guildId String
+  gameId  String
+  q       Int
+  r       Int
+  plays   Int
+  tier    Int
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  game    Game   @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([guildId, gameId])
+  @@unique([guildId, q, r])
+  @@index([gameId])
+}
+
+model Campaign {
+  id             String             @id @default(cuid())
+  guildId        String
+  name           String
+  startsAt       DateTime
+  /// The finale night; the campaign ends at the end of this day.
+  endsAt         DateTime
+  createdById    String?
+  /// derived: set once the campaign is over.
+  championUserId String?
+  createdAt      DateTime           @default(now())
+  guild          Guild              @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  createdBy      User?              @relation("CampaignCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  champion       User?              @relation("CampaignChampion", fields: [championUserId], references: [id], onDelete: SetNull)
+  standings      CampaignStanding[]
+  gameNights     GameNight[]
+
+  @@index([guildId, startsAt])
+  @@index([createdById])
+  @@index([championUserId])
+}
+
+/// derived
+model CampaignStanding {
+  id         String   @id @default(cuid())
+  campaignId String
+  userId     String
+  xp         Int
+  rank       Int
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, userId])
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Social
+// ---------------------------------------------------------------------------
+
+model Reaction {
+  id        String   @id @default(cuid())
+  questId   String
+  userId    String
+  kind      String
+  createdAt DateTime @default(now())
+  quest     Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questId, userId, kind])
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  questId   String
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+  quest     Quest    @relation(fields: [questId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([questId, createdAt])
+  @@index([userId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String
+  data      Json
+  /// Prevents duplicates when derived state is recomputed.
+  dedupeKey String?
+  readAt    DateTime?
+  emailedAt DateTime?
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, dedupeKey])
+  @@index([userId, readAt, createdAt])
+}
+
+model Report {
+  id           String       @id @default(cuid())
+  reporterId   String?
+  targetType   ReportTarget
+  targetId     String
+  reason       String
+  details      String?
+  status       ReportStatus @default(open)
+  resolvedById String?
+  resolvedAt   DateTime?
+  createdAt    DateTime     @default(now())
+  reporter     User?        @relation("Reporter", fields: [reporterId], references: [id], onDelete: SetNull)
+  resolvedBy   User?        @relation("ReportResolver", fields: [resolvedById], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([reporterId])
+  @@index([resolvedById])
+  @@index([targetType, targetId])
+}
+
+model ImportJob {
+  id         String       @id @default(cuid())
+  userId     String
+  format     String
+  fileName   String
+  status     ImportStatus @default(queued)
+  total      Int          @default(0)
+  processed  Int          @default(0)
+  created    Int          @default(0)
+  skipped    Int          @default(0)
+  warnings   Json         @default("[]")
+  /// Parsed plays waiting to be processed (cleared when done).
+  payload    Json?
+  error      String?
+  lockedAt   DateTime?
+  createdAt  DateTime     @default(now())
+  startedAt  DateTime?
+  finishedAt DateTime?
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quests     Quest[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+/// Fixed-window rate limit counters.
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
+}
