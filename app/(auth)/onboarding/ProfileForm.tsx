@@ -15,6 +15,9 @@ export function ProfileForm({ initial }: { initial: { handle: string; displayNam
   const [name, setName] = useState(initial.displayName);
   const [tz, setTz] = useState("");
   useEffect(() => setTz(Intl.DateTimeFormat().resolvedOptions().timeZone), []);
+  useEffect(() => {
+    if (state?.redirectTo) window.location.assign(state.redirectTo);
+  }, [state]);
   return (
     <form action={action} className="flex flex-col gap-5">
       <input type="hidden" name="timezone" value={tz} />

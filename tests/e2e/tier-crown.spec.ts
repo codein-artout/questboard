@@ -32,7 +32,7 @@ test("a tile rises to a Village on its 5th play and a crown changes hands", asyn
   await expect(b.page.getByText("Took a crown")).toBeVisible({ timeout: 10_000 });
 
   await a.page.goto("/notifications");
-  await expect(a.page.getByText(new RegExp(`took your Cascadia`))).toBeVisible();
+  await expect(a.page.getByText(/took your Cascadia/)).toHaveCount(1);
   await a.page.goto("/games/cascadia");
   await expect(a.page.getByText("Village, 5 plays.")).toBeVisible();
   await expect(a.page.getByRole("region", { name: "Friends crown" })).toContainText(`${b.user.name} holds it with 70`);

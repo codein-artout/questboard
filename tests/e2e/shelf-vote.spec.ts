@@ -25,7 +25,7 @@ test("shelf game proposed to a game night, voted on, then logged with a bounty",
   await a.page.getByLabel("Time").fill(`${pad(at.getHours())}:${pad(at.getMinutes())}`);
   await a.page.getByLabel("Name (optional)").fill("E2E night");
   await a.page.getByRole("button", { name: "Plan game night" }).click();
-  await a.page.waitForURL(/\/nights\/[a-z0-9]+$/);
+  await a.page.waitForURL(/\/nights\/[a-z0-9]{20,}$/);
   const nightUrl = new URL(a.page.url()).pathname;
 
   // Propose from the shelf, then vote.

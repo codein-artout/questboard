@@ -5,8 +5,7 @@ import { APP_NAME } from "@/game/config";
 import { db } from "@/lib/db";
 import { plural } from "@/lib/format";
 import { getViewer } from "@/lib/session";
-import { claimGuestAction } from "@/app/actions/claim";
-import { Button } from "@/components/ui/Button";
+import { ClaimForm } from "./ClaimForm";
 import { displayName } from "@/server/social";
 
 export const metadata: Metadata = { title: "Claim your quests" };
@@ -35,12 +34,7 @@ export default async function Claim({ params }: { params: Promise<{ token: strin
           <p className="mt-3 text-[15px] text-muted">
             {owner} logged {plural(guest._count.participations, "quest")} with a guest called {guest.name}. Claim them and they move to your island: tiles, records and XP, all counted from the start.
           </p>
-          <form action={claimGuestAction} className="mt-6">
-            <input type="hidden" name="token" value={token} />
-            <Button type="submit" size="lg">
-              Claim my quests
-            </Button>
-          </form>
+          <ClaimForm token={token} />
         </>
       )}
     </main>

@@ -1,13 +1,12 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireActionUser } from "@/lib/session";
 import { profileSchema } from "@/lib/validation/profile";
 import type { PlayerColor } from "@prisma/client";
 
-export type ProfileState = { error?: string; field?: string } | null;
+export type ProfileState = { error?: string; field?: string; redirectTo?: string } | null;
 
 export async function saveProfile(_prev: ProfileState, form: FormData): Promise<ProfileState> {
   const viewer = await requireActionUser();
@@ -37,12 +36,13 @@ export async function saveProfile(_prev: ProfileState, form: FormData): Promise<
     where: { id: viewer.id },
     data: { handle: parsed.data.handle, displayName: parsed.data.displayName, color: parsed.data.color as PlayerColor, timezone: tz, onboardedAt: viewer.onboardedAt ?? new Date() },
   });
-  redirect(first ? "/onboarding/start" : "/");
+  // Navigate on the client: a server-action redirect across route groups is unreliable.
+  return { redirectTo: first ? "/onboarding/start" : "/" };
 }
 
 const shelfSchema = z.object({ gameIds: z.array(z.string().min(1).max(40)).max(200) });
 
-export async function saveOnboardingShelf(form: FormData) {
+export async function saveOnboardingShelf(form: FormData): Promise<{ redirectTo: string }> {
   const viewer = await requireActionUser();
   const { gameIds } = shelfSchema.parse({ gameIds: form.getAll("gameId").map(String) });
   const valid = await db.game.findMany({ where: { id: { in: gameIds }, source: "catalog" }, select: { id: true } });
@@ -54,5 +54,5 @@ export async function saveOnboardingShelf(form: FormData) {
     const { recompute } = await import("@/server/recompute");
     await recompute([viewer.id], { notify: false });
   }
-  redirect("/");
+  return { redirectTo: "/" };
 }

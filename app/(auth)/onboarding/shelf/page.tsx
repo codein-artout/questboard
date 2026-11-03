@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { saveOnboardingShelf } from "@/app/actions/onboarding";
+import { ShelfPickerForm } from "./ShelfPickerForm";
 import { Button } from "@/components/ui/Button";
 import { MiniHex } from "@/components/game/HexTile";
 import { db } from "@/lib/db";
@@ -24,7 +24,7 @@ export default async function ShelfPicker() {
       <p className="m-0 text-[15px] font-bold text-gold">Step 3 of 3</p>
       <h1 className="m-0 mt-1 font-display text-5xl font-black leading-none">Which of these do you own?</h1>
       <p className="mt-3 text-[15px] text-muted">Owned games you haven’t played float offshore as “?” tiles, each with a bounty for its first play.</p>
-      <form action={saveOnboardingShelf} className="mt-6">
+      <ShelfPickerForm>
         <fieldset className="m-0 border-0 p-0">
           <legend className="sr-only">Games you own</legend>
           <div className="grid grid-cols-2 gap-2 desk:grid-cols-3">
@@ -44,7 +44,7 @@ export default async function ShelfPicker() {
           <Link href="/">Skip</Link>
         </div>
         <p className="mt-3 text-[13px] text-muted">You can add any game from the catalog on your shelf later.</p>
-      </form>
+      </ShelfPickerForm>
     </div>
   );
 }

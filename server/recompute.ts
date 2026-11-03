@@ -270,16 +270,19 @@ async function notifyChanges(before: Snapshot, output: EngineOutput, input: Engi
     if (prev === undefined && !before.crowns.size) continue;
     if (!c.holderUserId || prev === c.holderUserId) continue;
     const isGuild = c.scopeKey.startsWith("guild:");
-    // Friends crowns only matter to the island owner.
-    if (!isGuild && c.ownerUserId !== c.holderUserId && c.ownerUserId !== prev) continue;
+    // Friends crowns only matter to the island owner: "taken" when the owner
+    // took it, "lost" when the owner lost it. Guild crowns notify both sides.
+    const notifyTaken = isGuild || c.ownerUserId === c.holderUserId;
+    const notifyLost = isGuild || c.ownerUserId === prev;
+    if (!notifyTaken && !notifyLost) continue;
     const game = gameName.get(c.gameId) ?? "a game";
     const where = isGuild ? `${guildName.get(c.guildId!) ?? "guild"} crown` : "friends crown";
     const href = `/games/${slugs.get(c.gameId) ?? ""}`;
     const since = c.since.toISOString();
-    jobs.push(
+    if (notifyTaken) jobs.push(
       notify(c.holderUserId, "crown_taken", { title: `You took ${theGame(game)} ${where}${prev ? ` from ${name.get(prev) ?? "someone"}` : ""}`, body: `Record: ${c.recordLabel}.`, href }, `crown_taken:${k}:${since}`),
     );
-    if (prev) {
+    if (prev && notifyLost) {
       jobs.push(
         notify(prev, "crown_lost", { title: `${name.get(c.holderUserId) ?? "Someone"} took your ${game.replace(/^The /, "")} ${where}`, body: `New record: ${c.recordLabel}.`, href }, `crown_lost:${k}:${since}`),
       );
