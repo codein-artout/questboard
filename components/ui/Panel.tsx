@@ -19,11 +19,11 @@ export function PanelRow({ className, ...props }: React.HTMLAttributes<HTMLDivEl
 }
 
 /** Big number with a label under it (records, lifetime stats). */
-export function StatGrid({ stats, size = "md", className, label }: { stats: { value: React.ReactNode; label: string }[]; size?: "sm" | "md"; className?: string; label?: string }) {
+export function StatGrid({ stats, size = "md", className, label, colsClass }: { stats: { value: React.ReactNode; label: string }[]; size?: "sm" | "md"; className?: string; label?: string; colsClass?: string }) {
   return (
-    <section aria-label={label} className={cn("grid rounded-2xl bg-panel", className)} style={{ gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}>
+    <section aria-label={label} className={cn("grid overflow-hidden rounded-2xl bg-panel", colsClass, className)} style={colsClass ? undefined : { gridTemplateColumns: `repeat(${stats.length}, minmax(0, 1fr))` }}>
       {stats.map((s, i) => (
-        <div key={s.label} className={cn(size === "sm" ? "p-3" : "p-4", i < stats.length - 1 && "border-r border-panel-rule")}>
+        <div key={s.label} className={cn(size === "sm" ? "p-3" : "p-4", colsClass ? "-mb-px -mr-px border-b border-r border-panel-rule" : i < stats.length - 1 && "border-r border-panel-rule")}>
           <div className={cn("font-display font-black leading-tight", size === "sm" ? "text-[26px]" : "text-[34px]")}>{s.value}</div>
           <div className={cn("text-muted", size === "sm" ? "text-xs" : "text-[13px]")}>{s.label}</div>
         </div>
