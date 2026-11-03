@@ -22,14 +22,19 @@ All 19 milestones are implemented. See the table for what each covers and how it
 | 16 | Notification center + optional email | Done |
 | 17 | Block, report, rate limits, account deletion, JSON export, admin | Done |
 | 18 | Seed: 12 players, 3 guilds, ~500 quests over 10 months; recompute after | Done |
-| 19 | Unit tests, Playwright e2e with axe, GitHub Actions CI | See below |
+| 19 | Unit tests, Playwright e2e with axe, GitHub Actions CI | Done |
 
-## Verification
+## Verification (latest run)
 
-- `pnpm lint`, `pnpm typecheck`: clean.
-- `pnpm test`: 182 unit tests pass (rules engine, catalog, importers, permissions, places, formatting, validation).
-- `pnpm build`: passes.
-- `pnpm test:e2e`: five flows (signup → import → island; log → reward → feed → confirm; tier-up and crown change; shelf → propose → vote → log; guest claiming), plus a list/keyboard test, all with axe checks. Results are recorded in the latest commit message.
+From a fresh `git clone` of this branch, `pnpm install && pnpm db:setup && pnpm db:seed && pnpm build && pnpm test && pnpm test:e2e` exits 0:
+
+- `db:setup`: migrations applied, catalog synced (526 games). On a machine with no server running it starts a private cluster from local PostgreSQL binaries (also exercised).
+- `db:seed`: 12 players, 3 guilds, 499 quests, then a full recompute (403 tiles, 397 crowns, 147 titles, 150 teaching edges).
+- `pnpm build`: compiles; all routes listed.
+- `pnpm test`: 182 unit tests in 6 files.
+- `pnpm test:e2e`: 6 Playwright tests (signup → import → island builds; list/keyboard alternative; log → reward → feed → confirm; tier-up and crown change; shelf → propose → vote → log with bounty; guest claiming), all with axe checks (no serious or critical WCAG A/AA violations).
+- `pnpm lint` and `pnpm typecheck`: clean.
+- Visual pass: every route screenshotted at 1440, 1024 and 390 px with `node scripts/screenshots.mjs` and compared with the mockups. Fixes made: tile page crown order on phones, no tab bar on the log form, XP total wrapping, nav label wrapping, monogram for short first words, no doubled "the" in crown copy.
 
 ## Known limits / next steps
 
